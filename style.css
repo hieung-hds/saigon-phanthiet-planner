@@ -1,0 +1,196 @@
+/* Custom CSS & Print Styles for Phan Thiet - Mui Ne Trip Planner */
+
+[v-cloak] {
+  display: none !important;
+}
+
+/* Khai báo Font UTM HelvenTln / UTM HelvetIns / UTM Helve */
+@font-face {
+  font-family: 'UTM HelvenTln';
+  src: local('UTM HelvenTln'),
+       local('UTM-HelvenTln'),
+       local('UTM HelvetIns'),
+       local('UTM-HelvetIns'),
+       local('UTM HelveIns'),
+       local('UTM-HelveIns'),
+       local('UTM Helve'),
+       local('UTM Helve Bold'),
+       url('./fonts/UTM-Helve.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+  unicode-range: U+0020-007E, U+00A0-00FF, U+0102-0103, U+0110-0111, U+0128-0129, U+0168-0169, U+01A0-01A1, U+01AF-01B0, U+1EA0-1EF9, U+20AB;
+}
+
+@font-face {
+  font-family: 'UTM HelvetIns';
+  src: local('UTM HelvetIns'),
+       local('UTM-HelvetIns'),
+       local('UTM HelvenTln'),
+       local('UTM-HelvenTln'),
+       local('UTM HelveIns'),
+       local('UTM Helve'),
+       url('./fonts/UTM-Helve.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+  unicode-range: U+0020-007E, U+00A0-00FF, U+0102-0103, U+0110-0111, U+0128-0129, U+0168-0169, U+01A0-01A1, U+01AF-01B0, U+1EA0-1EF9, U+20AB;
+}
+
+:root {
+  --primary-coral: #ff6b4a;
+  --ocean-teal: #0ea5e9;
+  --sand-gold: #f59e0b;
+  --app-font: 'UTM HelvenTln', 'UTM HelvetIns', 'UTM HelveIns', 'UTM Helve', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+}
+
+body,
+button,
+input,
+select,
+textarea,
+h1, h2, h3, h4, h5, h6,
+p, span, div, a {
+  font-family: var(--app-font);
+}
+
+/* Đảm bảo Font Awesome icons KHÔNG BAO GIỜ bị đè bởi font chữ UTM */
+i,
+.fa,
+.fas,
+.far,
+.fal,
+.fad,
+.fab,
+.fa-solid,
+.fa-regular,
+.fa-brands,
+[class*="fa-"],
+[class*="fa-"]::before,
+[class*="fa-"]::after {
+  font-family: "Font Awesome 6 Free", "Font Awesome 6 Brands", sans-serif !important;
+  font-style: normal !important;
+}
+
+body {
+  background-color: #f8fafc;
+  color: #1e293b;
+  overflow-x: hidden;
+  letter-spacing: 0.01em;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: #f1f5f9;
+}
+::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 9999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+
+/* Glassmorphism */
+.glass-panel {
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.6);
+}
+
+.glass-nav {
+  background: rgba(255, 255, 255, 0.92);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-bottom: 1px solid rgba(226, 232, 240, 0.8);
+}
+
+/* Tropical gradient hero banner */
+.hero-gradient {
+  background: linear-gradient(135deg, #0284c7 0%, #0369a1 40%, #ea580c 100%);
+}
+
+.ocean-gradient-text {
+  background: linear-gradient(135deg, #0284c7 0%, #ea580c 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* Timeline vertical line */
+.timeline-stem {
+  position: absolute;
+  top: 1.5rem;
+  bottom: 0;
+  left: 1.25rem;
+  width: 2px;
+  background: linear-gradient(to bottom, #38bdf8, #cbd5e1);
+  transform: translateX(-50%);
+}
+
+/* Subtle badge pulse */
+@keyframes subtle-pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.85; transform: scale(1.03); }
+}
+.pulse-badge {
+  animation: subtle-pulse 3s infinite ease-in-out;
+}
+
+/* Card hover animation */
+.card-hover {
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.card-hover:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 24px -6px rgba(15, 23, 42, 0.08), 0 8px 16px -6px rgba(15, 23, 42, 0.04);
+}
+
+/* Print Styles for Exporting Itinerary to PDF */
+@media print {
+  body {
+    background: white !important;
+    color: black !important;
+    font-size: 12pt;
+  }
+
+  .no-print,
+  nav,
+  button,
+  .action-btn,
+  .modal-overlay,
+  .toast-container {
+    display: none !important;
+  }
+
+  .print-only {
+    display: block !important;
+  }
+
+  .glass-panel, .shadow-sm, .shadow-md, .shadow-lg, .shadow-xl {
+    box-shadow: none !important;
+    border: 1px solid #e2e8f0 !important;
+    backdrop-filter: none !important;
+    background: white !important;
+  }
+
+  .hero-gradient {
+    background: #0284c7 !important;
+    color: white !important;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  .timeline-stem {
+    background: #cbd5e1 !important;
+  }
+
+  .break-inside-avoid {
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+}
