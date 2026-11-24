@@ -11,7 +11,7 @@
       theme: {
         extend: {
           fontFamily: {
-            sans: ['"UTM HelvenTln"', '"UTM HelvetIns"', '"UTM HelveIns"', '"UTM Helve"', '"Helvetica Neue"', 'Helvetica', 'Arial', 'sans-serif'],
+            sans: ['-apple-system', 'BlinkMacSystemFont', '"SF Pro Display"', '"Segoe UI"', 'Roboto', '"Helvetica Neue"', '"UTM HelvenTln"', 'Arial', 'sans-serif'],
           }
         }
       }
@@ -37,33 +37,14 @@
   display: none !important;
 }
 
-/* Khai báo Font UTM HelvenTln / UTM HelvetIns / UTM Helve */
+/* Khai báo Font UTM HelvenTln / UTM Helve */
 @font-face {
   font-family: 'UTM HelvenTln';
   src: local('UTM HelvenTln'),
        local('UTM-HelvenTln'),
        local('UTM HelvetIns'),
        local('UTM-HelvetIns'),
-       local('UTM HelveIns'),
-       local('UTM-HelveIns'),
-       local('UTM Helve'),
-       local('UTM Helve Bold'),
-       url('./fonts/UTM-Helve.ttf') format('truetype');
-  font-weight: normal;
-  font-style: normal;
-  font-display: swap;
-  unicode-range: U+0020-007E, U+00A0-00FF, U+0102-0103, U+0110-0111, U+0128-0129, U+0168-0169, U+01A0-01A1, U+01AF-01B0, U+1EA0-1EF9, U+20AB;
-}
-
-@font-face {
-  font-family: 'UTM HelvetIns';
-  src: local('UTM HelvetIns'),
-       local('UTM-HelvetIns'),
-       local('UTM HelvenTln'),
-       local('UTM-HelvenTln'),
-       local('UTM HelveIns'),
-       local('UTM Helve'),
-       url('./fonts/UTM-Helve.ttf') format('truetype');
+       local('UTM Helve');
   font-weight: normal;
   font-style: normal;
   font-display: swap;
@@ -72,22 +53,29 @@
 
 :root {
   --primary-coral: #ff6b4a;
-  --ocean-teal: #0ea5e9;
+  --ocean-teal: #0284c7;
+  --ocean-dark: #0f172a;
   --sand-gold: #f59e0b;
-  --app-font: 'UTM HelvenTln', 'UTM HelvetIns', 'UTM HelveIns', 'UTM Helve', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  --app-font: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Segoe UI", Roboto, "Helvetica Neue", 'UTM HelvenTln', Arial, sans-serif;
 }
 
-body,
-button,
-input,
-select,
-textarea,
-h1, h2, h3, h4, h5, h6,
-p, span, div, a {
+body {
   font-family: var(--app-font);
+  font-style: normal !important;
+  background-color: #f8fafc;
+  color: #1e293b;
+  overflow-x: hidden;
+  letter-spacing: -0.01em;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
-/* Đảm bảo Font Awesome icons KHÔNG BAO GIỜ bị đè bởi font chữ UTM */
+button, input, select, textarea {
+  font-family: inherit;
+  font-style: normal !important;
+}
+
+/* Đảm bảo Font Awesome icons KHÔNG BAO GIỜ bị đè bởi font chữ khác */
 i,
 .fa,
 .fas,
@@ -105,20 +93,13 @@ i,
   font-style: normal !important;
 }
 
-body {
-  background-color: #f8fafc;
-  color: #1e293b;
-  overflow-x: hidden;
-  letter-spacing: 0.01em;
-}
-
 /* Custom Scrollbar */
 ::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
+  width: 6px;
+  height: 6px;
 }
 ::-webkit-scrollbar-track {
-  background: #f1f5f9;
+  background: transparent;
 }
 ::-webkit-scrollbar-thumb {
   background: #cbd5e1;
@@ -128,24 +109,38 @@ body {
   background: #94a3b8;
 }
 
-/* Glassmorphism */
+/* Modern Frosted Glassmorphism */
 .glass-panel {
-  background: rgba(255, 255, 255, 0.85);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.6);
+  background: rgba(255, 255, 255, 0.90);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(226, 232, 240, 0.85);
 }
 
 .glass-nav {
-  background: rgba(255, 255, 255, 0.92);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border-bottom: 1px solid rgba(226, 232, 240, 0.8);
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-bottom: 1px solid rgba(226, 232, 240, 0.85);
 }
 
-/* Tropical gradient hero banner */
+.glass-card-dark {
+  background: rgba(15, 23, 42, 0.40);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+.glass-card-light {
+  background: rgba(255, 255, 255, 0.14);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1px solid rgba(255, 255, 255, 0.22);
+}
+
+/* Luxury Ocean Gradient Banner */
 .hero-gradient {
-  background: linear-gradient(135deg, #0284c7 0%, #0369a1 40%, #ea580c 100%);
+  background: linear-gradient(135deg, #091e3a 0%, #10375c 42%, #0e607c 75%, #d9651a 100%);
 }
 
 .ocean-gradient-text {
@@ -161,14 +156,14 @@ body {
   bottom: 0;
   left: 1.25rem;
   width: 2px;
-  background: linear-gradient(to bottom, #38bdf8, #cbd5e1);
+  background: linear-gradient(to bottom, #38bdf8, #e2e8f0);
   transform: translateX(-50%);
 }
 
 /* Subtle badge pulse */
 @keyframes subtle-pulse {
   0%, 100% { opacity: 1; transform: scale(1); }
-  50% { opacity: 0.85; transform: scale(1.03); }
+  50% { opacity: 0.9; transform: scale(1.03); }
 }
 .pulse-badge {
   animation: subtle-pulse 3s infinite ease-in-out;
@@ -176,56 +171,27 @@ body {
 
 /* Card hover animation */
 .card-hover {
-  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 }
 .card-hover:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 12px 24px -6px rgba(15, 23, 42, 0.08), 0 8px 16px -6px rgba(15, 23, 42, 0.04);
+  transform: translateY(-2px);
+  box-shadow: 0 10px 25px -5px rgba(15, 23, 42, 0.08), 0 8px 10px -6px rgba(15, 23, 42, 0.04);
 }
 
-/* Print Styles for Exporting Itinerary to PDF */
+/* Print Styles */
 @media print {
   body {
     background: white !important;
     color: black !important;
-    font-size: 12pt;
+    font-size: 11pt;
   }
-
-  .no-print,
-  nav,
-  button,
-  .action-btn,
-  .modal-overlay,
-  .toast-container {
+  .no-print, nav, button, .action-btn, .modal-overlay, .toast-container {
     display: none !important;
   }
-
-  .print-only {
-    display: block !important;
-  }
-
-  .glass-panel, .shadow-sm, .shadow-md, .shadow-lg, .shadow-xl {
-    box-shadow: none !important;
-    border: 1px solid #e2e8f0 !important;
-    backdrop-filter: none !important;
-    background: white !important;
-  }
-
-  .hero-gradient {
-    background: #0284c7 !important;
-    color: white !important;
-    -webkit-print-color-adjust: exact;
-    print-color-adjust: exact;
-  }
-
-  .timeline-stem {
-    background: #cbd5e1 !important;
-  }
-
-  .break-inside-avoid {
-    break-inside: avoid;
-    page-break-inside: avoid;
-  }
+  .print-only { display: block !important; }
+  .glass-panel { box-shadow: none !important; border: 1px solid #e2e8f0 !important; background: white !important; }
+  .hero-gradient { background: #0f172a !important; color: white !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  .break-inside-avoid { break-inside: avoid; page-break-inside: avoid; }
 }
 
 </style>
@@ -428,45 +394,45 @@ body {
           </div>
 
           <!-- Real-time Countdown Card -->
-          <div class="bg-white/10 backdrop-blur-md rounded-2xl p-4 sm:p-5 border border-white/20 shadow-xl lg:min-w-[340px]">
-            <div class="flex items-center justify-between mb-3">
-              <span class="text-xs font-bold uppercase tracking-wider text-amber-200 flex items-center gap-1.5">
-                <i class="fa-solid fa-stopwatch animate-pulse"></i> Đếm Ngược Khởi Hành
+          <div class="glass-card-light rounded-3xl p-5 sm:p-6 shadow-2xl lg:min-w-[360px] border border-white/20">
+            <div class="flex items-center justify-between mb-3.5">
+              <span class="text-xs font-bold uppercase tracking-wider text-amber-300 flex items-center gap-2">
+                <i class="fa-solid fa-stopwatch animate-pulse text-sm"></i> Đếm Ngược Khởi Hành
               </span>
-              <span class="text-xs text-sky-200 font-medium">
+              <span class="text-xs text-sky-100 font-semibold px-2.5 py-0.5 rounded-full bg-white/15 border border-white/10">
                 {{ tripData.tripInfo.startDate }}
               </span>
             </div>
 
             <!-- Countdown numbers -->
-            <div class="grid grid-cols-4 gap-2 text-center">
-              <div class="bg-black/30 rounded-xl p-2 border border-white/10">
-                <span class="block text-2xl sm:text-3xl font-extrabold text-amber-300">{{ countdown.days }}</span>
-                <span class="text-[10px] sm:text-xs text-sky-200 font-medium uppercase">Ngày</span>
+            <div class="grid grid-cols-4 gap-2.5 text-center">
+              <div class="bg-black/30 backdrop-blur-md rounded-2xl p-2.5 sm:p-3 border border-white/15 shadow-inner">
+                <span class="block text-2xl sm:text-3xl font-black text-amber-300">{{ countdown.days }}</span>
+                <span class="text-[10px] sm:text-xs text-sky-200 font-bold uppercase tracking-wider">Ngày</span>
               </div>
-              <div class="bg-black/30 rounded-xl p-2 border border-white/10">
-                <span class="block text-2xl sm:text-3xl font-extrabold text-white">{{ String(countdown.hours).padStart(2, '0') }}</span>
-                <span class="text-[10px] sm:text-xs text-sky-200 font-medium uppercase">Giờ</span>
+              <div class="bg-black/30 backdrop-blur-md rounded-2xl p-2.5 sm:p-3 border border-white/15 shadow-inner">
+                <span class="block text-2xl sm:text-3xl font-black text-white">{{ String(countdown.hours).padStart(2, '0') }}</span>
+                <span class="text-[10px] sm:text-xs text-sky-200 font-bold uppercase tracking-wider">Giờ</span>
               </div>
-              <div class="bg-black/30 rounded-xl p-2 border border-white/10">
-                <span class="block text-2xl sm:text-3xl font-extrabold text-white">{{ String(countdown.minutes).padStart(2, '0') }}</span>
-                <span class="text-[10px] sm:text-xs text-sky-200 font-medium uppercase">Phút</span>
+              <div class="bg-black/30 backdrop-blur-md rounded-2xl p-2.5 sm:p-3 border border-white/15 shadow-inner">
+                <span class="block text-2xl sm:text-3xl font-black text-white">{{ String(countdown.minutes).padStart(2, '0') }}</span>
+                <span class="text-[10px] sm:text-xs text-sky-200 font-bold uppercase tracking-wider">Phút</span>
               </div>
-              <div class="bg-black/30 rounded-xl p-2 border border-white/10">
-                <span class="block text-2xl sm:text-3xl font-extrabold text-amber-200">{{ String(countdown.seconds).padStart(2, '0') }}</span>
-                <span class="text-[10px] sm:text-xs text-sky-200 font-medium uppercase">Giây</span>
+              <div class="bg-black/30 backdrop-blur-md rounded-2xl p-2.5 sm:p-3 border border-white/15 shadow-inner">
+                <span class="block text-2xl sm:text-3xl font-black text-amber-200">{{ String(countdown.seconds).padStart(2, '0') }}</span>
+                <span class="text-[10px] sm:text-xs text-sky-200 font-bold uppercase tracking-wider">Giây</span>
               </div>
             </div>
 
             <!-- Quick Trip Stats bar -->
-            <div class="mt-4 pt-3 border-t border-white/15 grid grid-cols-2 gap-2 text-xs">
-              <div>
-                <span class="text-sky-200 block text-[11px]">Dự toán quỹ nhóm:</span>
-                <span class="font-bold text-amber-300 text-sm">{{ formatCurrency(totalExpenseActual) }}</span>
+            <div class="mt-4 pt-3.5 border-t border-white/15 grid grid-cols-2 gap-3 text-xs">
+              <div class="bg-white/10 rounded-xl p-2.5">
+                <span class="text-sky-200 block text-[11px] font-medium">Dự toán quỹ nhóm:</span>
+                <span class="font-extrabold text-amber-300 text-sm mt-0.5 block">{{ formatCurrency(totalExpenseActual) }}</span>
               </div>
-              <div class="text-right">
-                <span class="text-sky-200 block text-[11px]">Đã chuẩn bị đồ:</span>
-                <span class="font-bold text-emerald-300 text-sm">{{ packingProgress }}% hoàn thành</span>
+              <div class="bg-white/10 rounded-xl p-2.5 text-right">
+                <span class="text-sky-200 block text-[11px] font-medium">Đã chuẩn bị đồ:</span>
+                <span class="font-extrabold text-emerald-300 text-sm mt-0.5 block">{{ packingProgress }}% xong</span>
               </div>
             </div>
           </div>
@@ -608,8 +574,8 @@ body {
                   <div class="space-y-1">
                     <div class="flex flex-wrap items-center gap-2">
                       <!-- Time Badge -->
-                      <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg text-xs font-extrabold bg-slate-900 text-white tracking-wide">
-                        <i class="fa-regular fa-clock text-[10px] text-amber-400"></i>
+                      <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-xl text-xs font-extrabold bg-sky-50 text-sky-800 border border-sky-200/80 tracking-wide shadow-2xs">
+                        <i class="fa-regular fa-clock text-xs text-sky-600"></i>
                         {{ act.time }}
                       </span>
 
@@ -625,7 +591,7 @@ body {
                     </div>
 
                     <!-- Title -->
-                    <h4 :class="{'line-through text-slate-400': act.done}" class="text-base sm:text-lg font-bold text-slate-900 pt-1">
+                    <h4 :class="{'line-through text-slate-400': act.done}" class="text-base sm:text-lg font-bold text-slate-800 capitalize pt-1">
                       {{ act.title }}
                     </h4>
                   </div>
@@ -651,9 +617,9 @@ body {
                 </div>
 
                 <!-- Notes & details -->
-                <p v-if="act.notes" class="mt-2 text-xs sm:text-sm text-slate-600 leading-relaxed bg-slate-50 p-3 rounded-xl border border-slate-100 whitespace-pre-line">
+                <div v-if="act.notes" class="mt-2.5 text-xs sm:text-sm text-slate-600 leading-relaxed bg-slate-50/90 border-l-4 border-sky-400 p-3 rounded-r-xl whitespace-pre-line">
                   {{ act.notes }}
-                </p>
+                </div>
 
                 <!-- Tip callout -->
                 <div v-if="act.tip" class="mt-2 text-xs text-amber-800 bg-amber-50/80 border border-amber-200/70 p-2.5 rounded-xl flex items-start gap-2">
@@ -780,14 +746,18 @@ body {
             <span class="text-xs text-slate-400 mt-1 block">Chia đều cho {{ tripData.tripInfo.travelers.length }} người</span>
           </div>
 
-          <div class="bg-gradient-to-br from-orange-500 to-rose-500 text-white p-5 rounded-2xl shadow-md flex items-center justify-between">
+          <div class="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-sm flex flex-col justify-between">
             <div>
-              <span class="text-xs font-semibold text-orange-100 uppercase tracking-wider block">Ghi chép chi tiêu</span>
-              <p class="text-xs text-orange-100 mt-1">Cập nhật hóa đơn để tự động chia tiền</p>
+              <span class="text-xs font-semibold text-slate-500 uppercase tracking-wider block">Ghi chép chi tiêu</span>
+              <p class="text-xs text-slate-400 mt-1">Cập nhật hóa đơn để tự động tính nợ</p>
             </div>
-            <button @click="openAddExpenseModal()" class="px-4 py-2 bg-white text-orange-600 hover:bg-orange-50 font-bold text-xs rounded-xl shadow transition active:scale-95">
-              + Thêm Khoản Chi
-            </button>
+            <div class="mt-3 flex items-center justify-between pt-2 border-t border-slate-100">
+              <span class="text-xs font-semibold text-slate-600">Chia đều nhóm 8 người</span>
+              <button @click="openAddExpenseModal()" class="px-4 py-2 bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 text-white font-bold text-xs rounded-xl shadow-md shadow-orange-500/20 transition active:scale-95 flex items-center gap-1.5">
+                <i class="fa-solid fa-plus"></i>
+                <span>Thêm Khoản Chi</span>
+              </button>
+            </div>
           </div>
         </div>
 

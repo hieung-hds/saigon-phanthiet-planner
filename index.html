@@ -11,18 +11,18 @@
       theme: {
         extend: {
           fontFamily: {
-            sans: ['"UTM HelvenTln"', '"UTM HelvetIns"', '"UTM HelveIns"', '"UTM Helve"', '"Helvetica Neue"', 'Helvetica', 'Arial', 'sans-serif'],
+            sans: ['-apple-system', 'BlinkMacSystemFont', '"SF Pro Display"', '"Segoe UI"', 'Roboto', '"Helvetica Neue"', '"UTM HelvenTln"', 'Arial', 'sans-serif'],
           }
         }
       }
     }
   </script>
   <!-- Font Awesome Icons -->
-  <link rel="stylesheet" href="fa/all.min.css?v=2.5">
+  <link rel="stylesheet" href="fa/all.min.css?v=2.6">
   <!-- Custom CSS -->
-  <link rel="stylesheet" href="style.css?v=2.5">
+  <link rel="stylesheet" href="style.css?v=2.6">
   <!-- Vue 3 Local + Fallback CDN -->
-  <script src="vue.global.prod.js?v=2.5"></script>
+  <script src="vue.global.prod.js?v=2.6"></script>
   <script>
     if (typeof Vue === 'undefined') {
       document.write('<script src="https://cdn.jsdelivr.net/npm/vue@3/dist/vue.global.prod.js"><\/script>');
@@ -210,45 +210,45 @@
           </div>
 
           <!-- Real-time Countdown Card -->
-          <div class="bg-white/10 backdrop-blur-md rounded-2xl p-4 sm:p-5 border border-white/20 shadow-xl lg:min-w-[340px]">
-            <div class="flex items-center justify-between mb-3">
-              <span class="text-xs font-bold uppercase tracking-wider text-amber-200 flex items-center gap-1.5">
-                <i class="fa-solid fa-stopwatch animate-pulse"></i> Đếm Ngược Khởi Hành
+          <div class="glass-card-light rounded-3xl p-5 sm:p-6 shadow-2xl lg:min-w-[360px] border border-white/20">
+            <div class="flex items-center justify-between mb-3.5">
+              <span class="text-xs font-bold uppercase tracking-wider text-amber-300 flex items-center gap-2">
+                <i class="fa-solid fa-stopwatch animate-pulse text-sm"></i> Đếm Ngược Khởi Hành
               </span>
-              <span class="text-xs text-sky-200 font-medium">
+              <span class="text-xs text-sky-100 font-semibold px-2.5 py-0.5 rounded-full bg-white/15 border border-white/10">
                 {{ tripData.tripInfo.startDate }}
               </span>
             </div>
 
             <!-- Countdown numbers -->
-            <div class="grid grid-cols-4 gap-2 text-center">
-              <div class="bg-black/30 rounded-xl p-2 border border-white/10">
-                <span class="block text-2xl sm:text-3xl font-extrabold text-amber-300">{{ countdown.days }}</span>
-                <span class="text-[10px] sm:text-xs text-sky-200 font-medium uppercase">Ngày</span>
+            <div class="grid grid-cols-4 gap-2.5 text-center">
+              <div class="bg-black/30 backdrop-blur-md rounded-2xl p-2.5 sm:p-3 border border-white/15 shadow-inner">
+                <span class="block text-2xl sm:text-3xl font-black text-amber-300">{{ countdown.days }}</span>
+                <span class="text-[10px] sm:text-xs text-sky-200 font-bold uppercase tracking-wider">Ngày</span>
               </div>
-              <div class="bg-black/30 rounded-xl p-2 border border-white/10">
-                <span class="block text-2xl sm:text-3xl font-extrabold text-white">{{ String(countdown.hours).padStart(2, '0') }}</span>
-                <span class="text-[10px] sm:text-xs text-sky-200 font-medium uppercase">Giờ</span>
+              <div class="bg-black/30 backdrop-blur-md rounded-2xl p-2.5 sm:p-3 border border-white/15 shadow-inner">
+                <span class="block text-2xl sm:text-3xl font-black text-white">{{ String(countdown.hours).padStart(2, '0') }}</span>
+                <span class="text-[10px] sm:text-xs text-sky-200 font-bold uppercase tracking-wider">Giờ</span>
               </div>
-              <div class="bg-black/30 rounded-xl p-2 border border-white/10">
-                <span class="block text-2xl sm:text-3xl font-extrabold text-white">{{ String(countdown.minutes).padStart(2, '0') }}</span>
-                <span class="text-[10px] sm:text-xs text-sky-200 font-medium uppercase">Phút</span>
+              <div class="bg-black/30 backdrop-blur-md rounded-2xl p-2.5 sm:p-3 border border-white/15 shadow-inner">
+                <span class="block text-2xl sm:text-3xl font-black text-white">{{ String(countdown.minutes).padStart(2, '0') }}</span>
+                <span class="text-[10px] sm:text-xs text-sky-200 font-bold uppercase tracking-wider">Phút</span>
               </div>
-              <div class="bg-black/30 rounded-xl p-2 border border-white/10">
-                <span class="block text-2xl sm:text-3xl font-extrabold text-amber-200">{{ String(countdown.seconds).padStart(2, '0') }}</span>
-                <span class="text-[10px] sm:text-xs text-sky-200 font-medium uppercase">Giây</span>
+              <div class="bg-black/30 backdrop-blur-md rounded-2xl p-2.5 sm:p-3 border border-white/15 shadow-inner">
+                <span class="block text-2xl sm:text-3xl font-black text-amber-200">{{ String(countdown.seconds).padStart(2, '0') }}</span>
+                <span class="text-[10px] sm:text-xs text-sky-200 font-bold uppercase tracking-wider">Giây</span>
               </div>
             </div>
 
             <!-- Quick Trip Stats bar -->
-            <div class="mt-4 pt-3 border-t border-white/15 grid grid-cols-2 gap-2 text-xs">
-              <div>
-                <span class="text-sky-200 block text-[11px]">Dự toán quỹ nhóm:</span>
-                <span class="font-bold text-amber-300 text-sm">{{ formatCurrency(totalExpenseActual) }}</span>
+            <div class="mt-4 pt-3.5 border-t border-white/15 grid grid-cols-2 gap-3 text-xs">
+              <div class="bg-white/10 rounded-xl p-2.5">
+                <span class="text-sky-200 block text-[11px] font-medium">Dự toán quỹ nhóm:</span>
+                <span class="font-extrabold text-amber-300 text-sm mt-0.5 block">{{ formatCurrency(totalExpenseActual) }}</span>
               </div>
-              <div class="text-right">
-                <span class="text-sky-200 block text-[11px]">Đã chuẩn bị đồ:</span>
-                <span class="font-bold text-emerald-300 text-sm">{{ packingProgress }}% hoàn thành</span>
+              <div class="bg-white/10 rounded-xl p-2.5 text-right">
+                <span class="text-sky-200 block text-[11px] font-medium">Đã chuẩn bị đồ:</span>
+                <span class="font-extrabold text-emerald-300 text-sm mt-0.5 block">{{ packingProgress }}% xong</span>
               </div>
             </div>
           </div>
@@ -390,8 +390,8 @@
                   <div class="space-y-1">
                     <div class="flex flex-wrap items-center gap-2">
                       <!-- Time Badge -->
-                      <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg text-xs font-extrabold bg-slate-900 text-white tracking-wide">
-                        <i class="fa-regular fa-clock text-[10px] text-amber-400"></i>
+                      <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-xl text-xs font-extrabold bg-sky-50 text-sky-800 border border-sky-200/80 tracking-wide shadow-2xs">
+                        <i class="fa-regular fa-clock text-xs text-sky-600"></i>
                         {{ act.time }}
                       </span>
 
@@ -407,7 +407,7 @@
                     </div>
 
                     <!-- Title -->
-                    <h4 :class="{'line-through text-slate-400': act.done}" class="text-base sm:text-lg font-bold text-slate-900 pt-1">
+                    <h4 :class="{'line-through text-slate-400': act.done}" class="text-base sm:text-lg font-bold text-slate-800 capitalize pt-1">
                       {{ act.title }}
                     </h4>
                   </div>
@@ -433,9 +433,9 @@
                 </div>
 
                 <!-- Notes & details -->
-                <p v-if="act.notes" class="mt-2 text-xs sm:text-sm text-slate-600 leading-relaxed bg-slate-50 p-3 rounded-xl border border-slate-100 whitespace-pre-line">
+                <div v-if="act.notes" class="mt-2.5 text-xs sm:text-sm text-slate-600 leading-relaxed bg-slate-50/90 border-l-4 border-sky-400 p-3 rounded-r-xl whitespace-pre-line">
                   {{ act.notes }}
-                </p>
+                </div>
 
                 <!-- Tip callout -->
                 <div v-if="act.tip" class="mt-2 text-xs text-amber-800 bg-amber-50/80 border border-amber-200/70 p-2.5 rounded-xl flex items-start gap-2">
@@ -562,14 +562,18 @@
             <span class="text-xs text-slate-400 mt-1 block">Chia đều cho {{ tripData.tripInfo.travelers.length }} người</span>
           </div>
 
-          <div class="bg-gradient-to-br from-orange-500 to-rose-500 text-white p-5 rounded-2xl shadow-md flex items-center justify-between">
+          <div class="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-sm flex flex-col justify-between">
             <div>
-              <span class="text-xs font-semibold text-orange-100 uppercase tracking-wider block">Ghi chép chi tiêu</span>
-              <p class="text-xs text-orange-100 mt-1">Cập nhật hóa đơn để tự động chia tiền</p>
+              <span class="text-xs font-semibold text-slate-500 uppercase tracking-wider block">Ghi chép chi tiêu</span>
+              <p class="text-xs text-slate-400 mt-1">Cập nhật hóa đơn để tự động tính nợ</p>
             </div>
-            <button @click="openAddExpenseModal()" class="px-4 py-2 bg-white text-orange-600 hover:bg-orange-50 font-bold text-xs rounded-xl shadow transition active:scale-95">
-              + Thêm Khoản Chi
-            </button>
+            <div class="mt-3 flex items-center justify-between pt-2 border-t border-slate-100">
+              <span class="text-xs font-semibold text-slate-600">Chia đều nhóm 8 người</span>
+              <button @click="openAddExpenseModal()" class="px-4 py-2 bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 text-white font-bold text-xs rounded-xl shadow-md shadow-orange-500/20 transition active:scale-95 flex items-center gap-1.5">
+                <i class="fa-solid fa-plus"></i>
+                <span>Thêm Khoản Chi</span>
+              </button>
+            </div>
           </div>
         </div>
 
@@ -1177,7 +1181,7 @@
   </div>
 
   <!-- Scripts -->
-  <script src="data.js?v=2.5"></script>
-  <script src="app.js?v=2.5"></script>
+  <script src="data.js?v=2.6"></script>
+  <script src="app.js?v=2.6"></script>
 </body>
 </html>
