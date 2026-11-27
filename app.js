@@ -235,6 +235,7 @@ createApp({
         target.dateTitle = dayForm.value.dateTitle.trim();
         target.date = dayForm.value.date.trim();
         target.hotel = dayForm.value.hotel.trim();
+        markLocalEdited();
         showToast("Đã cập nhật thông tin ngày thành công!", "success");
       }
       showDayModal.value = false;
@@ -343,6 +344,7 @@ createApp({
           done: activityForm.value.done || false
         });
         targetDay.activities.sort((a, b) => (a.time || "").localeCompare(b.time || ""));
+        markLocalEdited();
         showToast("Đã cập nhật hoạt động thành công!", "success");
       } else {
         targetDay.activities.push({
@@ -357,6 +359,7 @@ createApp({
           done: false
         });
         targetDay.activities.sort((a, b) => (a.time || "").localeCompare(b.time || ""));
+        markLocalEdited();
         showToast("Đã thêm hoạt động mới!", "success");
       }
 
@@ -371,6 +374,7 @@ createApp({
           d.activities = d.activities.filter((a) => a.id !== actId);
         });
       }
+      markLocalEdited();
       showToast("Đã xóa hoạt động thành công!", "success");
     }
 
@@ -388,6 +392,7 @@ createApp({
         activities: []
       });
       selectedDayIndex.value = tripData.value.itinerary.length - 1;
+      markLocalEdited();
       showToast(`Đã thêm Ngày ${nextDayNum}!`);
     }
 
@@ -416,6 +421,7 @@ createApp({
           done: false
         });
         day.activities.sort((a, b) => a.time.localeCompare(b.time));
+        markLocalEdited();
         showToast(`Đã thêm "${rec.name}" vào Ngày ${selectedDayForRec.value + 1}!`);
       }
       showAddRecToDayModal.value = false;
@@ -695,6 +701,12 @@ createApp({
     }
 
     let lastSheetCsv = localStorage.getItem("mui_ne_last_csv") || "";
+    const hasLocalEdits = ref(localStorage.getItem("mui_ne_has_local_edits") === "true");
+
+    function markLocalEdited() {
+      hasLocalEdits.value = true;
+      try { localStorage.setItem("mui_ne_has_local_edits", "true"); } catch (e) {}
+    }
 
     async function syncFromGoogleSheet(notify = true, force = false) {
       const SHEET_CSV_URL = "https://docs.google.com/spreadsheets/d/1lX2CfBN75L7zk59NdUNV4eL-AZqwxMYV78sW0fLxNSI/gviz/tq?tqx=out:csv&gid=1491333133";
@@ -706,9 +718,24 @@ createApp({
 
         // Kiểm tra thay đổi nếu chạy tự động
         const isChanged = Boolean(lastSheetCsv && csvText.trim() !== lastSheetCsv.trim());
-        if (!force && !notify && lastSheetCsv && !isChanged) {
-          isSyncing.value = false;
-          return;
+        if (!force && !notify) {
+          if (hasLocalEdits.value) {
+            // Bảo vệ chỉnh sửa trên web, không tự động ghi đè
+            if (isChanged) {
+              showToast("Google Sheet có cập nhật mới! Bấm 'Đồng bộ Sheet' nếu muốn tải về.", "info");
+            }
+            isSyncing.value = false;
+            return;
+          }
+          if (lastSheetCsv && !isChanged) {
+            isSyncing.value = false;
+            return;
+          }
+        }
+
+        if (notify || force) {
+          hasLocalEdits.value = false;
+          try { localStorage.setItem("mui_ne_has_local_edits", "false"); } catch (e) {}
         }
 
         lastSheetCsv = csvText;
