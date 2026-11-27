@@ -89,6 +89,23 @@ createApp({
       { deep: true }
     );
 
+    function persistData() {
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(tripData.value));
+      } catch (e) {
+        console.error("Lỗi lưu LocalStorage", e);
+      }
+    }
+
+    function normalizeTime(raw) {
+      if (!raw || typeof raw !== "string") return "09:00";
+      const m = raw.trim().match(/^(\d{1,2}):(\d{2})/);
+      if (!m) return "09:00";
+      const hh = String(Math.min(23, Math.max(0, parseInt(m[1], 10)))).padStart(2, "0");
+      const mm = String(Math.min(59, Math.max(0, parseInt(m[2], 10)))).padStart(2, "0");
+      return `${hh}:${mm}`;
+    }
+
     // Toast helper
     function showToast(message, type = "success") {
       toast.value = { show: true, message, type };
@@ -276,7 +293,8 @@ createApp({
         target.dateTitle = dayForm.value.dateTitle.trim();
         target.date = dayForm.value.date.trim();
         target.hotel = dayForm.value.hotel.trim();
-        markLocalEdited();
+        persistData();
+      markLocalEdited();
         showToast("Đã cập nhật thông tin ngày thành công!", "success");
       }
       showDayModal.value = false;
@@ -310,6 +328,7 @@ createApp({
       tripData.value.tripInfo.departure = tripInfoForm.value.departure.trim();
       tripData.value.tripInfo.destination = tripInfoForm.value.destination.trim();
       tripData.value.tripInfo.notes = tripInfoForm.value.notes.trim();
+      persistData();
       updateCountdown();
       showToast("Đã cập nhật thông tin chuyến đi thành công!", "success");
       showTripInfoModal.value = false;
@@ -344,7 +363,7 @@ createApp({
       activityForm.value = {
         id: act.id,
         dayIndex: dIdx !== -1 ? dIdx : 0,
-        time: act.time || "08:00",
+        time: normalizeTime(act.time || "08:00"),
         title: act.title || "",
         location: act.location || "",
         category: act.category || "sightseeing",
@@ -363,10 +382,12 @@ createApp({
         return;
       }
 
-      const targetDay = tripData.value.itinerary[activityForm.value.dayIndex];
+      const targetIdx = Number(activityForm.value.dayIndex);
+      const targetDay = tripData.value.itinerary[targetIdx];
       if (!targetDay) return;
 
       const cost = parseAmount(activityForm.value.cost);
+      const cleanTime = normalizeTime(activityForm.value.time || "08:00");
 
       if (editingActivity.value) {
         tripData.value.itinerary.forEach((d) => {
@@ -375,7 +396,7 @@ createApp({
 
         targetDay.activities.push({
           id: editingActivity.value.id,
-          time: activityForm.value.time || "08:00",
+          time: cleanTime,
           title,
           location: (activityForm.value.location || "").trim(),
           category: activityForm.value.category || "sightseeing",
@@ -385,12 +406,16 @@ createApp({
           done: activityForm.value.done || false
         });
         targetDay.activities.sort((a, b) => (a.time || "").localeCompare(b.time || ""));
+        if (selectedDayIndex.value !== -1) {
+          selectedDayIndex.value = targetIdx;
+        }
         markLocalEdited();
-        showToast("Đã cập nhật hoạt động thành công!", "success");
+        persistData();
+        showToast(`Đã cập nhật vào Ngày ${targetDay.day} (${targetDay.date})!`, "success");
       } else {
         targetDay.activities.push({
           id: "act-" + Date.now(),
-          time: activityForm.value.time || "08:00",
+          time: cleanTime,
           title,
           location: (activityForm.value.location || "").trim(),
           category: activityForm.value.category || "sightseeing",
@@ -400,8 +425,12 @@ createApp({
           done: false
         });
         targetDay.activities.sort((a, b) => (a.time || "").localeCompare(b.time || ""));
+        if (selectedDayIndex.value !== -1) {
+          selectedDayIndex.value = targetIdx;
+        }
         markLocalEdited();
-        showToast("Đã thêm hoạt động mới!", "success");
+        persistData();
+        showToast(`Đã thêm mới vào Ngày ${targetDay.day} (${targetDay.date})!`, "success");
       }
 
       showActivityModal.value = false;
@@ -415,12 +444,14 @@ createApp({
           d.activities = d.activities.filter((a) => a.id !== actId);
         });
       }
+      persistData();
       markLocalEdited();
       showToast("Đã xóa hoạt động thành công!", "success");
     }
 
     function toggleActivityDone(act) {
       act.done = !act.done;
+      persistData();
       showToast(act.done ? "Đã hoàn thành! Tuyệt vời!" : "Đã hủy đánh dấu hoàn thành");
     }
 
@@ -441,7 +472,7 @@ createApp({
     function promptAddRecToItinerary(rec) {
       targetRecForItinerary.value = rec;
       selectedDayForRec.value = selectedDayIndex.value >= 0 ? selectedDayIndex.value : 0;
-      selectedTimeForRec.value = rec.bestTime ? rec.bestTime.substring(0, 5) : "14:00";
+      selectedTimeForRec.value = normalizeTime(rec.bestTime ? rec.bestTime.substring(0, 5) : "14:00");
       showAddRecToDayModal.value = true;
     }
 
@@ -543,7 +574,8 @@ createApp({
             payer: expenseForm.value.payer || tripData.value.tripInfo.travelers[0]?.name || "Hiếu",
             note: expenseForm.value.note || ""
           };
-          showToast("Đã cập nhật khoản chi thành công!", "success");
+          persistData();
+      showToast("Đã cập nhật khoản chi thành công!", "success");
         }
       } else {
         tripData.value.expenses.unshift({
@@ -554,7 +586,8 @@ createApp({
           payer: expenseForm.value.payer || tripData.value.tripInfo.travelers[0]?.name || "Hiếu",
           note: expenseForm.value.note || ""
         });
-        showToast("Đã thêm khoản chi mới thành công!", "success");
+        persistData();
+      showToast("Đã thêm khoản chi mới thành công!", "success");
       }
 
       showExpenseModal.value = false;
@@ -563,6 +596,7 @@ createApp({
     function deleteExpense(id) {
       if (!tripData.value.expenses) return;
       tripData.value.expenses = tripData.value.expenses.filter((e) => e.id !== id);
+      persistData();
       showToast("Đã xóa khoản chi thành công!", "success");
     }
 
