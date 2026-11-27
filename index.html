@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
   <title>Sài Gòn ➔ Phan Thiết ➔ Mũi Né • Trip Planner</title>
   <!-- Tailwind CSS (Local Offline-First + CDN Fallback) -->
-  <script src="tailwind.js?v=3.2"></script>
+  <script src="tailwind.js?v=3.3"></script>
   <script>
     if (typeof tailwind !== 'undefined') {
       tailwind.config = {
@@ -20,11 +20,11 @@
     }
   </script>
   <!-- Font Awesome Icons (Local) -->
-  <link rel="stylesheet" href="fa/all.min.css?v=3.2">
+  <link rel="stylesheet" href="fa/all.min.css?v=3.3">
   <!-- Custom CSS -->
-  <link rel="stylesheet" href="style.css?v=3.2">
+  <link rel="stylesheet" href="style.css?v=3.3">
   <!-- Vue 3 Local + Fallback CDN -->
-  <script src="vue.global.prod.js?v=3.2"></script>
+  <script src="vue.global.prod.js?v=3.3"></script>
   <script>
     if (typeof Vue === 'undefined') {
       document.write('<script src="https://cdn.jsdelivr.net/npm/vue@3/dist/vue.global.prod.js"><\/script>');
@@ -1060,7 +1060,7 @@
     <!-- ========================================== -->
     <!-- MODAL 1: THÊM / SỬA HOẠT ĐỘNG              -->
     <!-- ========================================== -->
-    <div v-if="showActivityModal" class="fixed inset-0 z-50 overflow-y-auto bg-slate-900/60 backdrop-blur-sm flex min-h-full items-end sm:items-center justify-center p-0 sm:p-4 modal-overlay">
+    <div v-if="showActivityModal" class="fixed inset-0 z-[9999] overflow-y-auto bg-slate-900/60 backdrop-blur-sm flex min-h-full items-end sm:items-center justify-center p-0 sm:p-4 modal-overlay">
       <div class="relative w-full max-w-lg rounded-t-3xl sm:rounded-2xl bg-white shadow-2xl border border-slate-200 overflow-hidden max-h-[92vh] flex flex-col">
         <div class="p-4 sm:p-5 border-b border-slate-100 flex items-center justify-between flex-shrink-0 bg-white">
           <h3 class="text-base font-extrabold text-slate-900 flex items-center gap-2">
@@ -1082,10 +1082,10 @@
             </select>
           </div>
 
-          <div class="grid grid-cols-2 gap-3">
-            <div>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div class="min-w-0">
               <label class="block font-bold text-slate-700 mb-1">Khung giờ:</label>
-              <input v-model="activityForm.time" type="time" required class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 bg-white focus:outline-none focus:ring-2 focus:ring-sky-500 font-semibold">
+              <input v-model="activityForm.time" type="time" required class="w-full max-w-full min-w-0 block appearance-none px-3.5 py-2.5 rounded-xl border border-slate-200 bg-white focus:outline-none focus:ring-2 focus:ring-sky-500 font-semibold">
             </div>
             <div>
               <label class="block font-bold text-slate-700 mb-1">Danh mục:</label>
@@ -1127,7 +1127,7 @@
             <input v-model="activityForm.tip" type="text" placeholder="Vd: Đi trước 17h để ngắm hoàng hôn" class="w-full px-3.5 py-2 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-sky-500 text-xs">
           </div>
 
-          <div class="pt-3 border-t border-slate-100 flex items-center justify-end gap-2 sticky bottom-0 bg-white/95 backdrop-blur-sm -mx-4 px-4 sm:-mx-5 sm:px-5 py-2.5 mt-4">
+          <div class="pt-3 pb-5 sm:pb-3 border-t border-slate-100 flex items-center justify-end gap-2.5 sticky bottom-0 bg-white -mx-4 px-4 sm:-mx-5 sm:px-5 mt-4">
             <button type="button" @click="showActivityModal = false" class="px-4 py-2.5 rounded-xl border border-slate-200 text-slate-600 hover:bg-slate-100 font-bold transition">
               Hủy
             </button>
@@ -1142,7 +1142,7 @@
     <!-- ========================================== -->
     <!-- MODAL 2: SỬA THÔNG TIN NGÀY (DAY)          -->
     <!-- ========================================== -->
-    <div v-if="showDayModal" class="fixed inset-0 z-50 overflow-y-auto bg-slate-900/60 backdrop-blur-sm flex min-h-full items-end sm:items-center justify-center p-0 sm:p-4 modal-overlay">
+    <div v-if="showDayModal" class="fixed inset-0 z-[9999] overflow-y-auto bg-slate-900/60 backdrop-blur-sm flex min-h-full items-end sm:items-center justify-center p-0 sm:p-4 modal-overlay">
       <div class="relative w-full max-w-md rounded-t-3xl sm:rounded-2xl bg-white shadow-2xl border border-slate-200 overflow-hidden max-h-[90vh] flex flex-col">
         <div class="p-4 sm:p-5 border-b border-slate-100 flex items-center justify-between flex-shrink-0 bg-white">
           <h3 class="text-base font-extrabold text-slate-900 flex items-center gap-2">
@@ -1170,7 +1170,7 @@
             <input v-model="dayForm.hotel" type="text" placeholder="Vd: Centara Mirage Resort Mũi Né" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-sky-500">
           </div>
 
-          <div class="pt-3 border-t border-slate-100 flex items-center justify-end gap-2 sticky bottom-0 bg-white/95 backdrop-blur-sm -mx-4 px-4 sm:-mx-5 sm:px-5 py-2.5 mt-4">
+          <div class="pt-3 pb-5 sm:pb-3 border-t border-slate-100 flex items-center justify-end gap-2.5 sticky bottom-0 bg-white -mx-4 px-4 sm:-mx-5 sm:px-5 mt-4">
             <button type="button" @click="showDayModal = false" class="px-4 py-2.5 rounded-xl border border-slate-200 text-slate-600 font-bold transition hover:bg-slate-100">
               Hủy
             </button>
@@ -1185,7 +1185,7 @@
     <!-- ========================================== -->
     <!-- MODAL 3: SỬA THÔNG TIN CHUYẾN ĐI (TRIP)    -->
     <!-- ========================================== -->
-    <div v-if="showTripInfoModal" class="fixed inset-0 z-50 overflow-y-auto bg-slate-900/60 backdrop-blur-sm flex min-h-full items-end sm:items-center justify-center p-0 sm:p-4 modal-overlay">
+    <div v-if="showTripInfoModal" class="fixed inset-0 z-[9999] overflow-y-auto bg-slate-900/60 backdrop-blur-sm flex min-h-full items-end sm:items-center justify-center p-0 sm:p-4 modal-overlay">
       <div class="relative w-full max-w-lg rounded-t-3xl sm:rounded-2xl bg-white shadow-2xl border border-slate-200 overflow-hidden max-h-[90vh] flex flex-col">
         <div class="p-4 sm:p-5 border-b border-slate-100 flex items-center justify-between flex-shrink-0 bg-white">
           <h3 class="text-base font-extrabold text-slate-900 flex items-center gap-2">
@@ -1203,8 +1203,8 @@
             <input v-model="tripInfoForm.title" type="text" required class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-sky-500 font-bold text-slate-900">
           </div>
 
-          <div class="grid grid-cols-2 gap-3">
-            <div>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div class="min-w-0">
               <label class="block font-bold text-slate-700 mb-1">Ngày bắt đầu:</label>
               <input v-model="tripInfoForm.startDate" type="date" required class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-sky-500 font-semibold">
             </div>
@@ -1230,7 +1230,7 @@
             <textarea v-model="tripInfoForm.notes" rows="2" class="w-full px-3.5 py-2 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-sky-500 text-xs"></textarea>
           </div>
 
-          <div class="pt-3 border-t border-slate-100 flex items-center justify-end gap-2 sticky bottom-0 bg-white/95 backdrop-blur-sm -mx-4 px-4 sm:-mx-5 sm:px-5 py-2.5 mt-4">
+          <div class="pt-3 pb-5 sm:pb-3 border-t border-slate-100 flex items-center justify-end gap-2.5 sticky bottom-0 bg-white -mx-4 px-4 sm:-mx-5 sm:px-5 mt-4">
             <button type="button" @click="showTripInfoModal = false" class="px-4 py-2.5 rounded-xl border border-slate-200 text-slate-600 font-bold transition hover:bg-slate-100">
               Hủy
             </button>
@@ -1245,7 +1245,7 @@
     <!-- ========================================== -->
     <!-- MODAL 4: THÊM ĐỊA ĐIỂM GỢI Ý VÀO LỊCH TRÌNH -->
     <!-- ========================================== -->
-    <div v-if="showAddRecToDayModal" class="fixed inset-0 z-50 overflow-y-auto bg-slate-900/60 backdrop-blur-sm flex min-h-full items-end sm:items-center justify-center p-0 sm:p-4 modal-overlay">
+    <div v-if="showAddRecToDayModal" class="fixed inset-0 z-[9999] overflow-y-auto bg-slate-900/60 backdrop-blur-sm flex min-h-full items-end sm:items-center justify-center p-0 sm:p-4 modal-overlay">
       <div class="relative w-full max-w-md rounded-t-3xl sm:rounded-2xl bg-white shadow-2xl border border-slate-200 overflow-hidden max-h-[90vh] flex flex-col p-5 space-y-4">
         <div class="flex items-center justify-between border-b border-slate-100 pb-3 flex-shrink-0">
           <h3 class="text-base font-extrabold text-slate-900 flex items-center gap-2">
@@ -1274,7 +1274,7 @@
 
           <div>
             <label class="block font-bold text-slate-700 mb-1">Khung giờ dự kiến:</label>
-            <input v-model="selectedTimeForRec" type="time" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 bg-white font-semibold">
+            <input v-model="selectedTimeForRec" type="time" class="w-full max-w-full min-w-0 block appearance-none px-3.5 py-2.5 rounded-xl border border-slate-200 bg-white font-semibold">
           </div>
 
           <div class="pt-3 border-t border-slate-100 flex items-center justify-end gap-2 sticky bottom-0 bg-white">
@@ -1292,7 +1292,7 @@
     <!-- ========================================== -->
     <!-- MODAL 5: THÊM / SỬA KHOẢN CHI (EXPENSE)     -->
     <!-- ========================================== -->
-    <div v-if="showExpenseModal" class="fixed inset-0 z-50 overflow-y-auto bg-slate-900/60 backdrop-blur-sm flex min-h-full items-end sm:items-center justify-center p-0 sm:p-4 modal-overlay">
+    <div v-if="showExpenseModal" class="fixed inset-0 z-[9999] overflow-y-auto bg-slate-900/60 backdrop-blur-sm flex min-h-full items-end sm:items-center justify-center p-0 sm:p-4 modal-overlay">
       <div class="relative w-full max-w-md rounded-t-3xl sm:rounded-2xl bg-white shadow-2xl border border-slate-200 overflow-hidden max-h-[90vh] flex flex-col">
         <div class="p-4 sm:p-5 border-b border-slate-100 flex items-center justify-between flex-shrink-0 bg-white">
           <h3 class="text-base font-extrabold text-slate-900 flex items-center gap-2">
@@ -1343,7 +1343,7 @@
             <input v-model="expenseForm.note" type="text" placeholder="Ghi chú chi tiết..." class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200">
           </div>
 
-          <div class="pt-3 border-t border-slate-100 flex items-center justify-end gap-2 sticky bottom-0 bg-white/95 backdrop-blur-sm -mx-4 px-4 sm:-mx-5 sm:px-5 py-2.5 mt-4">
+          <div class="pt-3 pb-5 sm:pb-3 border-t border-slate-100 flex items-center justify-end gap-2.5 sticky bottom-0 bg-white -mx-4 px-4 sm:-mx-5 sm:px-5 mt-4">
             <button type="button" @click="showExpenseModal = false" class="px-4 py-2.5 rounded-xl border border-slate-200 text-slate-600 font-bold hover:bg-slate-100 transition">
               Hủy
             </button>
@@ -1364,7 +1364,7 @@
   </div>
 
   <!-- Scripts -->
-  <script src="data.js?v=3.2"></script>
-  <script src="app.js?v=3.2"></script>
+  <script src="data.js?v=3.3"></script>
+  <script src="app.js?v=3.3"></script>
 </body>
 </html>
