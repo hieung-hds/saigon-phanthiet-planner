@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
   <title>Sài Gòn ➔ Phan Thiết ➔ Mũi Né • Trip Planner</title>
   <!-- Tailwind CSS (Local Offline-First + CDN Fallback) -->
-  <script src="tailwind.js?v=3.4"></script>
+  <script src="tailwind.js?v=3.5"></script>
   <script>
     if (typeof tailwind !== 'undefined') {
       tailwind.config = {
@@ -20,11 +20,11 @@
     }
   </script>
   <!-- Font Awesome Icons (Local) -->
-  <link rel="stylesheet" href="fa/all.min.css?v=3.4">
+  <link rel="stylesheet" href="fa/all.min.css?v=3.5">
   <!-- Custom CSS -->
-  <link rel="stylesheet" href="style.css?v=3.4">
+  <link rel="stylesheet" href="style.css?v=3.5">
   <!-- Vue 3 Local + Fallback CDN -->
-  <script src="vue.global.prod.js?v=3.4"></script>
+  <script src="vue.global.prod.js?v=3.5"></script>
   <script>
     if (typeof Vue === 'undefined') {
       document.write('<script src="https://cdn.jsdelivr.net/npm/vue@3/dist/vue.global.prod.js"><\/script>');
@@ -1164,16 +1164,16 @@
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div class="min-w-0">
               <label class="block font-bold text-slate-700 mb-1">Ngày bắt đầu:</label>
-              <input v-model="tripInfoForm.startDate" type="date" required class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-sky-500 font-semibold">
+              <input v-model="tripInfoForm.startDate" type="date" required class="w-full max-w-full min-w-0 block appearance-none bg-white px-3.5 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-sky-500 font-semibold">
             </div>
             <div>
               <label class="block font-bold text-slate-700 mb-1">Ngày kết thúc:</label>
-              <input v-model="tripInfoForm.endDate" type="date" required class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-sky-500 font-semibold">
+              <input v-model="tripInfoForm.endDate" type="date" required class="w-full max-w-full min-w-0 block appearance-none bg-white px-3.5 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-sky-500 font-semibold">
             </div>
           </div>
 
-          <div class="grid grid-cols-2 gap-3">
-            <div>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div class="min-w-0">
               <label class="block font-bold text-slate-700 mb-1">Điểm khởi hành:</label>
               <input v-model="tripInfoForm.departure" type="text" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-sky-500">
             </div>
@@ -1268,8 +1268,8 @@
             <input v-model="expenseForm.title" type="text" required placeholder="Vd: Hải sản Một Nắng" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-sky-500 font-bold text-slate-900">
           </div>
 
-          <div class="grid grid-cols-2 gap-3">
-            <div>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div class="min-w-0">
               <label class="block font-bold text-slate-700 mb-1">Số tiền (VNĐ):</label>
               <input v-model="expenseForm.amount" type="text" required placeholder="Vd: 500k hoặc 1.2tr" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-sky-500 font-bold text-slate-900">
             </div>
@@ -1322,7 +1322,7 @@
   </div>
 
   <!-- Scripts -->
-  <script src="data.js?v=3.4"></script>
-  <script src="app.js?v=3.4"></script>
+  <script src="data.js?v=3.5"></script>
+  <script src="app.js?v=3.5"></script>
 </body>
 </html>
