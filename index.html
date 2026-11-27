@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
   <title>Sài Gòn ➔ Phan Thiết ➔ Mũi Né • Trip Planner</title>
   <!-- Tailwind CSS (Local Offline-First + CDN Fallback) -->
-  <script src="tailwind.js?v=3.1"></script>
+  <script src="tailwind.js?v=3.2"></script>
   <script>
     if (typeof tailwind !== 'undefined') {
       tailwind.config = {
@@ -20,11 +20,11 @@
     }
   </script>
   <!-- Font Awesome Icons (Local) -->
-  <link rel="stylesheet" href="fa/all.min.css?v=3.1">
+  <link rel="stylesheet" href="fa/all.min.css?v=3.2">
   <!-- Custom CSS -->
-  <link rel="stylesheet" href="style.css?v=3.1">
+  <link rel="stylesheet" href="style.css?v=3.2">
   <!-- Vue 3 Local + Fallback CDN -->
-  <script src="vue.global.prod.js?v=3.1"></script>
+  <script src="vue.global.prod.js?v=3.2"></script>
   <script>
     if (typeof Vue === 'undefined') {
       document.write('<script src="https://cdn.jsdelivr.net/npm/vue@3/dist/vue.global.prod.js"><\/script>');
@@ -197,8 +197,14 @@
               <span class="px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-rose-500/30 text-white border border-rose-300/30">
                 🎂 Mừng sinh nhật Bún (27/11)
               </span>
-              <span v-if="hasLocalEdits" class="px-2 py-0.5 rounded-full text-[10px] font-semibold bg-sky-500/30 text-sky-100 border border-sky-300/30">
-                <i class="fa-solid fa-cloud-arrow-up mr-0.5"></i> Đã lưu chỉnh sửa trên máy
+              <span v-if="cloudSyncStatus === 'syncing'" class="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-amber-400/25 text-amber-100 border border-amber-300/30">
+                <i class="fa-solid fa-arrows-rotate fa-spin mr-1"></i>Đang đồng bộ 8 người...
+              </span>
+              <span v-else-if="cloudSyncStatus === 'synced'" class="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-emerald-500/30 text-emerald-100 border border-emerald-300/30">
+                <i class="fa-solid fa-cloud mr-1"></i>Đồng bộ chung 8 người
+              </span>
+              <span v-else-if="hasLocalEdits" class="px-2 py-0.5 rounded-full text-[10px] font-semibold bg-sky-500/30 text-sky-100 border border-sky-300/30">
+                <i class="fa-solid fa-hard-drive mr-1"></i>Đã lưu trên máy
               </span>
             </div>
 
@@ -1358,7 +1364,7 @@
   </div>
 
   <!-- Scripts -->
-  <script src="data.js?v=3.1"></script>
-  <script src="app.js?v=3.1"></script>
+  <script src="data.js?v=3.2"></script>
+  <script src="app.js?v=3.2"></script>
 </body>
 </html>

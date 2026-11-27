@@ -11,6 +11,9 @@ createApp({
     const filterRecType = ref("all");
     const showHeroDetails = ref(false);
     const showToolsMenu = ref(false);
+    const cloudSyncStatus = ref("idle"); // 'idle' | 'syncing' | 'synced' | 'local'
+    let lastCloudUpdatedAt = 0;
+    let isApplyingRemoteUpdate = false;
     const activitySearch = ref("");
     const activityCatFilter = ref("all");
     const expenseSearch = ref("");
@@ -76,7 +79,60 @@ createApp({
       return JSON.parse(JSON.stringify(window.DEFAULT_TRIP_DATA));
     }
 
-    // Save automatically on change
+    let cloudSaveTimer = null;
+
+    async function saveToCloud() {
+      if (isApplyingRemoteUpdate) return;
+      cloudSyncStatus.value = "syncing";
+      try {
+        const res = await fetch("/api/trip", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ tripData: tripData.value })
+        });
+        if (!res.ok) throw new Error("HTTP " + res.status);
+        const json = await res.json();
+        if (json && json.updatedAt) {
+          lastCloudUpdatedAt = json.updatedAt;
+        }
+        cloudSyncStatus.value = "synced";
+      } catch (err) {
+        // Fallback silently on localhost/offline without Netlify Functions
+        cloudSyncStatus.value = "local";
+      }
+    }
+
+    async function loadFromCloud(notifyOnUpdate = false) {
+      try {
+        const res = await fetch("/api/trip?_t=" + Date.now());
+        if (!res.ok) throw new Error("HTTP " + res.status);
+        const json = await res.json();
+        if (json && json.exists && json.data) {
+          if (json.updatedAt > lastCloudUpdatedAt) {
+            isApplyingRemoteUpdate = true;
+            tripData.value = json.data;
+            lastCloudUpdatedAt = json.updatedAt;
+            try {
+              localStorage.setItem(STORAGE_KEY, JSON.stringify(json.data));
+            } catch (e) {}
+            setTimeout(() => {
+              isApplyingRemoteUpdate = false;
+            }, 50);
+            if (notifyOnUpdate) {
+              showToast("🔄 Lịch trình vừa được cập nhật mới từ thành viên khác!", "info");
+            }
+          }
+          cloudSyncStatus.value = "synced";
+        } else if (json && json.exists === false) {
+          // Seed cloud database with current tripData on first run
+          await saveToCloud();
+        }
+      } catch (err) {
+        cloudSyncStatus.value = "local";
+      }
+    }
+
+    // Save automatically on change (localStorage + debounced cloud sync for packing checkboxes etc.)
     watch(
       tripData,
       (newVal) => {
@@ -84,6 +140,12 @@ createApp({
           localStorage.setItem(STORAGE_KEY, JSON.stringify(newVal));
         } catch (e) {
           console.error("Lỗi lưu LocalStorage", e);
+        }
+        if (!isApplyingRemoteUpdate) {
+          clearTimeout(cloudSaveTimer);
+          cloudSaveTimer = setTimeout(() => {
+            saveToCloud();
+          }, 300);
         }
       },
       { deep: true }
@@ -95,6 +157,8 @@ createApp({
       } catch (e) {
         console.error("Lỗi lưu LocalStorage", e);
       }
+      clearTimeout(cloudSaveTimer);
+      saveToCloud();
     }
 
     function normalizeTime(raw) {
@@ -929,6 +993,7 @@ createApp({
           });
 
           tripData.value.itinerary = newItinerary;
+          persistData();
           const nowStr = new Date().toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
           lastSyncedTime.value = nowStr;
           localStorage.setItem('mui_ne_last_synced', nowStr);
@@ -953,13 +1018,23 @@ createApp({
       updateCountdown();
       setInterval(updateCountdown, 1000);
 
-      // Tự động đồng bộ từ Google Sheet khi vào trang (nếu có cập nhật mới)
-      syncFromGoogleSheet(false, false);
+      // Tải dữ liệu dùng chung cho cả 8 thành viên từ Cloud
+      loadFromCloud(false);
 
-      // Tự động kiểm tra và cập nhật khi Google Sheet có thay đổi (mỗi 30 giây)
+      // Tự động kiểm tra cập nhật từ các thành viên khác mỗi 6 giây
       setInterval(() => {
-        syncFromGoogleSheet(false, false);
-      }, 30000);
+        if (typeof document === "undefined" || document.visibilityState === "visible") {
+          loadFromCloud(true);
+        }
+      }, 6000);
+
+      if (typeof document !== "undefined") {
+        document.addEventListener("visibilitychange", () => {
+          if (document.visibilityState === "visible") {
+            loadFromCloud(true);
+          }
+        });
+      }
     });
 
     return {
@@ -968,6 +1043,7 @@ createApp({
       filterRecType,
       showHeroDetails,
       showToolsMenu,
+      cloudSyncStatus,
       activitySearch,
       activityCatFilter,
       expenseSearch,
