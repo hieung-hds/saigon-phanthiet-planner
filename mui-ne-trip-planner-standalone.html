@@ -228,7 +228,7 @@ i,
 
 </script>
 </head>
-<body class="min-h-screen text-slate-800 antialiased selection:bg-orange-500 selection:text-white pb-24 md:pb-10">
+<body class="min-h-screen text-slate-800 antialiased selection:bg-orange-500 selection:text-white pb-16 md:pb-10">
   <div id="app" v-cloak class="min-h-screen flex flex-col">
 
     <!-- ========================================== -->
@@ -348,27 +348,27 @@ i,
 
         </div>
 
-        <!-- Tablet Navigation Bar (Visible on md, hidden on mobile & lg) -->
-        <nav class="hidden md:flex lg:hidden space-x-1.5 border-t border-slate-100 py-2 overflow-x-auto no-scrollbar text-xs font-bold">
-          <button @click="activeTab = 'itinerary'" :class="[activeTab === 'itinerary' ? 'bg-sky-600 text-white shadow-sm' : 'text-slate-600 hover:bg-slate-100']" class="px-3.5 py-1.5 rounded-xl transition flex items-center gap-1.5 whitespace-nowrap">
-            <i class="fa-regular fa-calendar-check"></i>
-            <span>Lịch Trình ({{ tripData.itinerary.length }} ngày)</span>
+        <!-- Mobile & Tablet Navigation Bar (Visible below lg, never covered by bottom badges) -->
+        <nav class="grid grid-cols-5 gap-1 border-t border-slate-100 py-1.5 lg:hidden text-[10px] sm:text-xs font-bold">
+          <button @click="activeTab = 'itinerary'" :class="[activeTab === 'itinerary' ? 'bg-sky-600 text-white shadow-sm' : 'text-slate-600 hover:bg-slate-100']" class="py-1.5 px-1 rounded-xl transition flex flex-col sm:flex-row items-center justify-center gap-0.5 sm:gap-1.5">
+            <i class="fa-regular fa-calendar-check text-xs"></i>
+            <span class="truncate">Lịch trình</span>
           </button>
-          <button @click="activeTab = 'explore'" :class="[activeTab === 'explore' ? 'bg-sky-600 text-white shadow-sm' : 'text-slate-600 hover:bg-slate-100']" class="px-3.5 py-1.5 rounded-xl transition flex items-center gap-1.5 whitespace-nowrap">
-            <i class="fa-solid fa-compass"></i>
-            <span>Khám Phá & Quán Ngon</span>
+          <button @click="activeTab = 'explore'" :class="[activeTab === 'explore' ? 'bg-sky-600 text-white shadow-sm' : 'text-slate-600 hover:bg-slate-100']" class="py-1.5 px-1 rounded-xl transition flex flex-col sm:flex-row items-center justify-center gap-0.5 sm:gap-1.5">
+            <i class="fa-solid fa-compass text-xs"></i>
+            <span class="truncate">Khám phá</span>
           </button>
-          <button @click="activeTab = 'budget'" :class="[activeTab === 'budget' ? 'bg-sky-600 text-white shadow-sm' : 'text-slate-600 hover:bg-slate-100']" class="px-3.5 py-1.5 rounded-xl transition flex items-center gap-1.5 whitespace-nowrap">
-            <i class="fa-solid fa-wallet"></i>
-            <span>Chi Phí & Chia Tiền</span>
+          <button @click="activeTab = 'budget'" :class="[activeTab === 'budget' ? 'bg-sky-600 text-white shadow-sm' : 'text-slate-600 hover:bg-slate-100']" class="py-1.5 px-1 rounded-xl transition flex flex-col sm:flex-row items-center justify-center gap-0.5 sm:gap-1.5">
+            <i class="fa-solid fa-wallet text-xs"></i>
+            <span class="truncate">Chi phí</span>
           </button>
-          <button @click="activeTab = 'packing'" :class="[activeTab === 'packing' ? 'bg-sky-600 text-white shadow-sm' : 'text-slate-600 hover:bg-slate-100']" class="px-3.5 py-1.5 rounded-xl transition flex items-center gap-1.5 whitespace-nowrap">
-            <i class="fa-solid fa-suitcase-rolling"></i>
-            <span>Hành Lý ({{ packingProgress }}%)</span>
+          <button @click="activeTab = 'packing'" :class="[activeTab === 'packing' ? 'bg-sky-600 text-white shadow-sm' : 'text-slate-600 hover:bg-slate-100']" class="py-1.5 px-1 rounded-xl transition flex flex-col sm:flex-row items-center justify-center gap-0.5 sm:gap-1.5">
+            <i class="fa-solid fa-suitcase-rolling text-xs"></i>
+            <span class="truncate">Hành lý</span>
           </button>
-          <button @click="activeTab = 'tips'" :class="[activeTab === 'tips' ? 'bg-sky-600 text-white shadow-sm' : 'text-slate-600 hover:bg-slate-100']" class="px-3.5 py-1.5 rounded-xl transition flex items-center gap-1.5 whitespace-nowrap">
-            <i class="fa-solid fa-lightbulb"></i>
-            <span>Bí Kíp Bỏ Túi</span>
+          <button @click="activeTab = 'tips'" :class="[activeTab === 'tips' ? 'bg-sky-600 text-white shadow-sm' : 'text-slate-600 hover:bg-slate-100']" class="py-1.5 px-1 rounded-xl transition flex flex-col sm:flex-row items-center justify-center gap-0.5 sm:gap-1.5">
+            <i class="fa-solid fa-lightbulb text-xs"></i>
+            <span class="truncate">Bí kíp</span>
           </button>
         </nav>
       </div>
@@ -531,7 +531,7 @@ i,
       <section v-if="activeTab === 'itinerary'" class="space-y-4 sm:space-y-5">
 
         <!-- Sticky Day Selector & Search Bar -->
-        <div class="glass-panel rounded-2xl p-2.5 sm:p-3.5 shadow-md space-y-2.5 sticky top-14 sm:top-16 z-30">
+        <div class="glass-panel rounded-2xl p-2.5 sm:p-3.5 shadow-md space-y-2.5 sticky top-[108px] sm:top-[104px] lg:top-16 z-30">
           <div class="flex items-center justify-between gap-2">
             <!-- Horizontal Day Pills -->
             <div class="flex items-center gap-1.5 overflow-x-auto no-scrollbar py-0.5">
@@ -748,7 +748,7 @@ i,
       <section v-if="activeTab === 'explore'" class="space-y-4 sm:space-y-5">
 
         <!-- Filter Bar -->
-        <div class="glass-panel p-3 sm:p-4 rounded-2xl shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 sticky top-14 sm:top-16 z-30">
+        <div class="glass-panel p-3 sm:p-4 rounded-2xl shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 sticky top-[108px] sm:top-[104px] lg:top-16 z-30">
           <div class="flex items-center gap-1.5 overflow-x-auto no-scrollbar">
             <button @click="filterRecType = 'all'" :class="[filterRecType === 'all' ? 'bg-sky-600 text-white font-bold shadow-sm' : 'bg-slate-100 text-slate-700 hover:bg-slate-200 font-semibold']" class="px-3.5 py-1.5 rounded-xl text-xs transition whitespace-nowrap">
               Tất Cả ({{ tripData.recommendations.length }})
@@ -1187,7 +1187,7 @@ i,
     <!-- ========================================== -->
     <!-- MOBILE FLOATING ACTION BUTTON (FAB)        -->
     <!-- ========================================== -->
-    <div class="fixed right-4 bottom-20 z-30 sm:hidden no-print">
+    <div class="fixed left-4 bottom-4 z-30 sm:hidden no-print">
       <button v-if="activeTab === 'itinerary'" @click="openAddActivityModal()"
         class="flex items-center gap-1.5 px-4 py-3 rounded-full bg-gradient-to-r from-orange-500 to-amber-500 text-white font-extrabold text-xs shadow-xl shadow-orange-500/30 active:scale-95">
         <i class="fa-solid fa-plus"></i>
@@ -1199,48 +1199,6 @@ i,
         <span>Khoản Chi</span>
       </button>
     </div>
-
-    <!-- ========================================== -->
-    <!-- MOBILE BOTTOM NAVIGATION BAR               -->
-    <!-- ========================================== -->
-    <nav class="glass-bottom-nav fixed bottom-0 inset-x-0 z-40 md:hidden no-print">
-      <div class="grid grid-cols-5 h-16 px-1">
-        <button @click="activeTab = 'itinerary'" :class="[activeTab === 'itinerary' ? 'text-sky-600 font-extrabold' : 'text-slate-400 font-semibold']" class="flex flex-col items-center justify-center gap-1 transition">
-          <div :class="[activeTab === 'itinerary' ? 'bg-sky-100 text-sky-600 px-3 py-0.5 rounded-full' : '']">
-            <i class="fa-regular fa-calendar-check text-sm"></i>
-          </div>
-          <span class="text-[10px]">Lịch trình</span>
-        </button>
-
-        <button @click="activeTab = 'explore'" :class="[activeTab === 'explore' ? 'text-sky-600 font-extrabold' : 'text-slate-400 font-semibold']" class="flex flex-col items-center justify-center gap-1 transition">
-          <div :class="[activeTab === 'explore' ? 'bg-sky-100 text-sky-600 px-3 py-0.5 rounded-full' : '']">
-            <i class="fa-solid fa-compass text-sm"></i>
-          </div>
-          <span class="text-[10px]">Khám phá</span>
-        </button>
-
-        <button @click="activeTab = 'budget'" :class="[activeTab === 'budget' ? 'text-sky-600 font-extrabold' : 'text-slate-400 font-semibold']" class="flex flex-col items-center justify-center gap-1 transition">
-          <div :class="[activeTab === 'budget' ? 'bg-sky-100 text-sky-600 px-3 py-0.5 rounded-full' : '']">
-            <i class="fa-solid fa-wallet text-sm"></i>
-          </div>
-          <span class="text-[10px]">Chi phí</span>
-        </button>
-
-        <button @click="activeTab = 'packing'" :class="[activeTab === 'packing' ? 'text-sky-600 font-extrabold' : 'text-slate-400 font-semibold']" class="flex flex-col items-center justify-center gap-1 transition">
-          <div :class="[activeTab === 'packing' ? 'bg-sky-100 text-sky-600 px-3 py-0.5 rounded-full' : '']">
-            <i class="fa-solid fa-suitcase-rolling text-sm"></i>
-          </div>
-          <span class="text-[10px]">Hành lý</span>
-        </button>
-
-        <button @click="activeTab = 'tips'" :class="[activeTab === 'tips' ? 'text-sky-600 font-extrabold' : 'text-slate-400 font-semibold']" class="flex flex-col items-center justify-center gap-1 transition">
-          <div :class="[activeTab === 'tips' ? 'bg-sky-100 text-sky-600 px-3 py-0.5 rounded-full' : '']">
-            <i class="fa-solid fa-lightbulb text-sm"></i>
-          </div>
-          <span class="text-[10px]">Bí kíp</span>
-        </button>
-      </div>
-    </nav>
 
     <!-- FOOTER (Desktop) -->
     <footer class="hidden md:block bg-white border-t border-slate-200/80 py-5 text-center text-xs text-slate-500 mt-12 no-print">
@@ -1257,8 +1215,8 @@ i,
     <!-- ========================================== -->
     <!-- MODAL 1: THÊM / SỬA HOẠT ĐỘNG              -->
     <!-- ========================================== -->
-    <div v-if="showActivityModal" class="fixed inset-0 z-[9999] overflow-y-auto bg-slate-900/60 backdrop-blur-sm flex min-h-full items-end sm:items-center justify-center p-0 sm:p-4 modal-overlay">
-      <div class="relative w-full max-w-lg rounded-t-3xl sm:rounded-2xl bg-white shadow-2xl border border-slate-200 overflow-hidden max-h-[92vh] flex flex-col">
+    <div v-if="showActivityModal" class="fixed inset-0 z-[9999] overflow-y-auto bg-slate-900/60 backdrop-blur-sm flex min-h-full items-center justify-center p-3 sm:p-4 modal-overlay">
+      <div class="relative w-full max-w-lg rounded-2xl bg-white shadow-2xl border border-slate-200 overflow-hidden max-h-[82vh] flex flex-col">
         <div class="p-4 sm:p-5 border-b border-slate-100 flex items-center justify-between flex-shrink-0 bg-white">
           <h3 class="text-base font-extrabold text-slate-900 flex items-center gap-2">
             <i class="fa-solid fa-calendar-check text-sky-500"></i>
@@ -1324,7 +1282,7 @@ i,
             <input v-model="activityForm.tip" type="text" placeholder="Vd: Đi trước 17h để ngắm hoàng hôn" class="w-full px-3.5 py-2 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-sky-500 text-xs">
           </div>
 
-          <div class="pt-3 pb-5 sm:pb-3 border-t border-slate-100 flex items-center justify-end gap-2.5 sticky bottom-0 bg-white -mx-4 px-4 sm:-mx-5 sm:px-5 mt-4">
+          <div class="pt-3 pb-3 border-t border-slate-100 flex items-center justify-end gap-2.5 sticky bottom-0 bg-white -mx-4 px-4 sm:-mx-5 sm:px-5 mt-4">
             <button type="button" @click="showActivityModal = false" class="px-4 py-2.5 rounded-xl border border-slate-200 text-slate-600 hover:bg-slate-100 font-bold transition">
               Hủy
             </button>
@@ -1339,8 +1297,8 @@ i,
     <!-- ========================================== -->
     <!-- MODAL 2: SỬA THÔNG TIN NGÀY (DAY)          -->
     <!-- ========================================== -->
-    <div v-if="showDayModal" class="fixed inset-0 z-[9999] overflow-y-auto bg-slate-900/60 backdrop-blur-sm flex min-h-full items-end sm:items-center justify-center p-0 sm:p-4 modal-overlay">
-      <div class="relative w-full max-w-md rounded-t-3xl sm:rounded-2xl bg-white shadow-2xl border border-slate-200 overflow-hidden max-h-[90vh] flex flex-col">
+    <div v-if="showDayModal" class="fixed inset-0 z-[9999] overflow-y-auto bg-slate-900/60 backdrop-blur-sm flex min-h-full items-center justify-center p-3 sm:p-4 modal-overlay">
+      <div class="relative w-full max-w-md rounded-2xl bg-white shadow-2xl border border-slate-200 overflow-hidden max-h-[82vh] flex flex-col">
         <div class="p-4 sm:p-5 border-b border-slate-100 flex items-center justify-between flex-shrink-0 bg-white">
           <h3 class="text-base font-extrabold text-slate-900 flex items-center gap-2">
             <i class="fa-solid fa-calendar-day text-amber-500"></i>
@@ -1367,7 +1325,7 @@ i,
             <input v-model="dayForm.hotel" type="text" placeholder="Vd: Centara Mirage Resort Mũi Né" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-sky-500">
           </div>
 
-          <div class="pt-3 pb-5 sm:pb-3 border-t border-slate-100 flex items-center justify-end gap-2.5 sticky bottom-0 bg-white -mx-4 px-4 sm:-mx-5 sm:px-5 mt-4">
+          <div class="pt-3 pb-3 border-t border-slate-100 flex items-center justify-end gap-2.5 sticky bottom-0 bg-white -mx-4 px-4 sm:-mx-5 sm:px-5 mt-4">
             <button type="button" @click="showDayModal = false" class="px-4 py-2.5 rounded-xl border border-slate-200 text-slate-600 font-bold transition hover:bg-slate-100">
               Hủy
             </button>
@@ -1382,8 +1340,8 @@ i,
     <!-- ========================================== -->
     <!-- MODAL 3: SỬA THÔNG TIN CHUYẾN ĐI (TRIP)    -->
     <!-- ========================================== -->
-    <div v-if="showTripInfoModal" class="fixed inset-0 z-[9999] overflow-y-auto bg-slate-900/60 backdrop-blur-sm flex min-h-full items-end sm:items-center justify-center p-0 sm:p-4 modal-overlay">
-      <div class="relative w-full max-w-lg rounded-t-3xl sm:rounded-2xl bg-white shadow-2xl border border-slate-200 overflow-hidden max-h-[90vh] flex flex-col">
+    <div v-if="showTripInfoModal" class="fixed inset-0 z-[9999] overflow-y-auto bg-slate-900/60 backdrop-blur-sm flex min-h-full items-center justify-center p-3 sm:p-4 modal-overlay">
+      <div class="relative w-full max-w-lg rounded-2xl bg-white shadow-2xl border border-slate-200 overflow-hidden max-h-[82vh] flex flex-col">
         <div class="p-4 sm:p-5 border-b border-slate-100 flex items-center justify-between flex-shrink-0 bg-white">
           <h3 class="text-base font-extrabold text-slate-900 flex items-center gap-2">
             <i class="fa-solid fa-map-location-dot text-rose-500"></i>
@@ -1427,7 +1385,7 @@ i,
             <textarea v-model="tripInfoForm.notes" rows="2" class="w-full px-3.5 py-2 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-sky-500 text-xs"></textarea>
           </div>
 
-          <div class="pt-3 pb-5 sm:pb-3 border-t border-slate-100 flex items-center justify-end gap-2.5 sticky bottom-0 bg-white -mx-4 px-4 sm:-mx-5 sm:px-5 mt-4">
+          <div class="pt-3 pb-3 border-t border-slate-100 flex items-center justify-end gap-2.5 sticky bottom-0 bg-white -mx-4 px-4 sm:-mx-5 sm:px-5 mt-4">
             <button type="button" @click="showTripInfoModal = false" class="px-4 py-2.5 rounded-xl border border-slate-200 text-slate-600 font-bold transition hover:bg-slate-100">
               Hủy
             </button>
@@ -1442,8 +1400,8 @@ i,
     <!-- ========================================== -->
     <!-- MODAL 4: THÊM ĐỊA ĐIỂM GỢI Ý VÀO LỊCH TRÌNH -->
     <!-- ========================================== -->
-    <div v-if="showAddRecToDayModal" class="fixed inset-0 z-[9999] overflow-y-auto bg-slate-900/60 backdrop-blur-sm flex min-h-full items-end sm:items-center justify-center p-0 sm:p-4 modal-overlay">
-      <div class="relative w-full max-w-md rounded-t-3xl sm:rounded-2xl bg-white shadow-2xl border border-slate-200 overflow-hidden max-h-[90vh] flex flex-col p-5 space-y-4">
+    <div v-if="showAddRecToDayModal" class="fixed inset-0 z-[9999] overflow-y-auto bg-slate-900/60 backdrop-blur-sm flex min-h-full items-center justify-center p-3 sm:p-4 modal-overlay">
+      <div class="relative w-full max-w-md rounded-2xl bg-white shadow-2xl border border-slate-200 overflow-hidden max-h-[82vh] flex flex-col p-5 space-y-4">
         <div class="flex items-center justify-between border-b border-slate-100 pb-3 flex-shrink-0">
           <h3 class="text-base font-extrabold text-slate-900 flex items-center gap-2">
             <i class="fa-solid fa-location-dot text-rose-500"></i>
@@ -1489,8 +1447,8 @@ i,
     <!-- ========================================== -->
     <!-- MODAL 5: THÊM / SỬA KHOẢN CHI (EXPENSE)     -->
     <!-- ========================================== -->
-    <div v-if="showExpenseModal" class="fixed inset-0 z-[9999] overflow-y-auto bg-slate-900/60 backdrop-blur-sm flex min-h-full items-end sm:items-center justify-center p-0 sm:p-4 modal-overlay">
-      <div class="relative w-full max-w-md rounded-t-3xl sm:rounded-2xl bg-white shadow-2xl border border-slate-200 overflow-hidden max-h-[90vh] flex flex-col">
+    <div v-if="showExpenseModal" class="fixed inset-0 z-[9999] overflow-y-auto bg-slate-900/60 backdrop-blur-sm flex min-h-full items-center justify-center p-3 sm:p-4 modal-overlay">
+      <div class="relative w-full max-w-md rounded-2xl bg-white shadow-2xl border border-slate-200 overflow-hidden max-h-[82vh] flex flex-col">
         <div class="p-4 sm:p-5 border-b border-slate-100 flex items-center justify-between flex-shrink-0 bg-white">
           <h3 class="text-base font-extrabold text-slate-900 flex items-center gap-2">
             <i class="fa-solid fa-receipt text-orange-500"></i>
@@ -1540,7 +1498,7 @@ i,
             <input v-model="expenseForm.note" type="text" placeholder="Ghi chú chi tiết..." class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200">
           </div>
 
-          <div class="pt-3 pb-5 sm:pb-3 border-t border-slate-100 flex items-center justify-end gap-2.5 sticky bottom-0 bg-white -mx-4 px-4 sm:-mx-5 sm:px-5 mt-4">
+          <div class="pt-3 pb-3 border-t border-slate-100 flex items-center justify-end gap-2.5 sticky bottom-0 bg-white -mx-4 px-4 sm:-mx-5 sm:px-5 mt-4">
             <button type="button" @click="showExpenseModal = false" class="px-4 py-2.5 rounded-xl border border-slate-200 text-slate-600 font-bold hover:bg-slate-100 transition">
               Hủy
             </button>
