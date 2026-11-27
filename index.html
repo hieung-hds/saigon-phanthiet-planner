@@ -2,138 +2,174 @@
 <html lang="vi">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Lập Kế Hoạch Chuyến Đi SÀI GÒN - PHAN THIẾT - MŨI NÉ</title>
-  <!-- Tailwind CSS -->
-  <script src="https://cdn.tailwindcss.com"></script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+  <title>Sài Gòn ➔ Phan Thiết ➔ Mũi Né • Trip Planner</title>
+  <!-- Tailwind CSS (Local Offline-First + CDN Fallback) -->
+  <script src="tailwind.js?v=3.0"></script>
   <script>
-    tailwind.config = {
-      theme: {
-        extend: {
-          fontFamily: {
-            sans: ['-apple-system', 'BlinkMacSystemFont', '"SF Pro Display"', '"Segoe UI"', 'Roboto', '"Helvetica Neue"', '"UTM HelvenTln"', 'Arial', 'sans-serif'],
+    if (typeof tailwind !== 'undefined') {
+      tailwind.config = {
+        theme: {
+          extend: {
+            fontFamily: {
+              sans: ['-apple-system', 'BlinkMacSystemFont', '"SF Pro Display"', '"Segoe UI"', 'Roboto', '"Helvetica Neue"', '"UTM HelvenTln"', 'Arial', 'sans-serif'],
+            }
           }
         }
-      }
+      };
     }
   </script>
-  <!-- Font Awesome Icons -->
-  <link rel="stylesheet" href="fa/all.min.css?v=2.7">
+  <!-- Font Awesome Icons (Local) -->
+  <link rel="stylesheet" href="fa/all.min.css?v=3.0">
   <!-- Custom CSS -->
-  <link rel="stylesheet" href="style.css?v=2.7">
+  <link rel="stylesheet" href="style.css?v=3.0">
   <!-- Vue 3 Local + Fallback CDN -->
-  <script src="vue.global.prod.js?v=2.7"></script>
+  <script src="vue.global.prod.js?v=3.0"></script>
   <script>
     if (typeof Vue === 'undefined') {
       document.write('<script src="https://cdn.jsdelivr.net/npm/vue@3/dist/vue.global.prod.js"><\/script>');
     }
   </script>
 </head>
-<body class="bg-slate-50 min-h-screen text-slate-800 antialiased selection:bg-orange-500 selection:text-white">
+<body class="min-h-screen text-slate-800 antialiased selection:bg-orange-500 selection:text-white pb-24 md:pb-10">
   <div id="app" v-cloak class="min-h-screen flex flex-col">
 
-    <!-- TOP ANNOUNCEMENT BAR (Sinh nhật Bún) -->
-    <div class="bg-gradient-to-r from-amber-500 via-orange-500 to-rose-500 text-white text-xs sm:text-sm font-medium py-2 px-4 shadow-sm text-center flex items-center justify-center gap-2">
-      <span class="inline-flex items-center justify-center p-1 bg-white/20 rounded-full text-xs">🎉</span>
-      <span>Chuyến đi đặc biệt mừng sinh nhật <strong>Bún 🎂</strong> (27/11 - 30/11/2026) • Mũi Né & Sài Gòn Food Tour!</span>
-    </div>
+    <!-- ========================================== -->
+    <!-- STICKY TOP APP BAR                         -->
+    <!-- ========================================== -->
+    <header class="glass-nav sticky top-0 z-40 transition-all">
+      <div class="max-w-7xl mx-auto px-3.5 sm:px-6 lg:px-8">
+        <div class="flex items-center justify-between h-14 sm:h-16 gap-2">
 
-    <!-- MAIN NAVBAR -->
-    <header class="glass-nav sticky top-0 z-40 transition-all duration-200">
-      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="flex items-center justify-between h-16 sm:h-20">
-          
-          <!-- Logo & Brand -->
-          <div class="flex items-center gap-3">
-            <div class="w-10 h-10 sm:w-12 sm:h-12 rounded-2xl bg-gradient-to-tr from-sky-500 via-teal-400 to-orange-400 flex items-center justify-center text-white shadow-md shadow-sky-500/20 text-xl font-bold">
-              🌊
+          <!-- Brand Logo & Title -->
+          <div class="flex items-center gap-2.5 min-w-0">
+            <div class="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-gradient-to-tr from-sky-600 via-cyan-500 to-orange-400 flex items-center justify-center text-white shadow-md shadow-sky-500/20 text-base sm:text-lg flex-shrink-0">
+              <i class="fa-solid fa-umbrella-beach"></i>
             </div>
-            <div>
-              <div class="flex items-center gap-2">
-                <h1 class="text-base sm:text-xl font-extrabold tracking-tight text-slate-900">
+            <div class="min-w-0">
+              <div class="flex items-center gap-1.5">
+                <h1 class="text-sm sm:text-lg font-extrabold tracking-tight text-slate-900 truncate">
                   SG ➔ PHAN THIẾT ➔ MŨI NÉ
                 </h1>
-                <span class="hidden md:inline-flex items-center px-2 py-0.5 rounded-full text-xs font-semibold bg-orange-100 text-orange-700 border border-orange-200">
-                  4N3Đ Chuẩn Sheet
+                <span class="hidden sm:inline-flex items-center px-2 py-0.5 rounded-full text-[11px] font-bold bg-rose-50 text-rose-600 border border-rose-200 flex-shrink-0">
+                  🎂 Sinh nhật Bún
                 </span>
               </div>
-              <p class="text-xs text-slate-500 font-medium hidden sm:block">
-                Lên kế hoạch thông minh • Bản đồ • Ngân sách • Chia tiền nhóm
+              <p class="text-[11px] text-slate-500 font-medium truncate">
+                27/11 – 30/11/2026 • Đoàn {{ tripData.tripInfo.travelers.length }} thành viên
               </p>
             </div>
           </div>
 
-          <!-- Quick Action Buttons -->
-          <div class="flex items-center gap-2">
-            <!-- Sync with Google Sheet Button -->
-            <button @click="syncFromGoogleSheet(true)" :disabled="isSyncing" title="Đồng bộ trực tiếp dữ liệu mới nhất từ Google Sheet" 
-              class="inline-flex items-center gap-1.5 px-3 py-2 text-xs sm:text-sm font-semibold text-emerald-800 bg-emerald-100 hover:bg-emerald-200 border border-emerald-300 rounded-xl transition shadow-sm active:scale-95 disabled:opacity-50">
-              <i class="fa-solid fa-arrows-rotate text-emerald-700" :class="{'fa-spin': isSyncing}"></i>
-              <span class="hidden sm:inline">{{ isSyncing ? 'Đang đọc Sheet...' : 'Đồng bộ Sheet' }}</span>
+          <!-- Desktop Center Navigation Pills -->
+          <nav class="hidden lg:flex items-center bg-slate-100/90 p-1 rounded-2xl border border-slate-200/70 text-xs font-bold">
+            <button @click="activeTab = 'itinerary'" :class="[activeTab === 'itinerary' ? 'bg-white text-sky-700 shadow-sm' : 'text-slate-600 hover:text-slate-900']" class="px-3.5 py-1.5 rounded-xl transition flex items-center gap-1.5">
+              <i class="fa-regular fa-calendar-check"></i>
+              <span>Lịch Trình</span>
+              <span class="px-1.5 py-0.2 rounded-full text-[10px] bg-sky-100 text-sky-700">{{ tripData.itinerary.length }}N</span>
+            </button>
+            <button @click="activeTab = 'explore'" :class="[activeTab === 'explore' ? 'bg-white text-sky-700 shadow-sm' : 'text-slate-600 hover:text-slate-900']" class="px-3.5 py-1.5 rounded-xl transition flex items-center gap-1.5">
+              <i class="fa-solid fa-compass"></i>
+              <span>Khám Phá</span>
+              <span class="px-1.5 py-0.2 rounded-full text-[10px] bg-slate-200 text-slate-700">{{ tripData.recommendations.length }}</span>
+            </button>
+            <button @click="activeTab = 'budget'" :class="[activeTab === 'budget' ? 'bg-white text-sky-700 shadow-sm' : 'text-slate-600 hover:text-slate-900']" class="px-3.5 py-1.5 rounded-xl transition flex items-center gap-1.5">
+              <i class="fa-solid fa-wallet"></i>
+              <span>Chi Phí & Chia Tiền</span>
+            </button>
+            <button @click="activeTab = 'packing'" :class="[activeTab === 'packing' ? 'bg-white text-sky-700 shadow-sm' : 'text-slate-600 hover:text-slate-900']" class="px-3.5 py-1.5 rounded-xl transition flex items-center gap-1.5">
+              <i class="fa-solid fa-suitcase-rolling"></i>
+              <span>Hành Lý</span>
+              <span class="px-1.5 py-0.2 rounded-full text-[10px] bg-emerald-100 text-emerald-700">{{ packingProgress }}%</span>
+            </button>
+            <button @click="activeTab = 'tips'" :class="[activeTab === 'tips' ? 'bg-white text-sky-700 shadow-sm' : 'text-slate-600 hover:text-slate-900']" class="px-3.5 py-1.5 rounded-xl transition flex items-center gap-1.5">
+              <i class="fa-solid fa-lightbulb"></i>
+              <span>Bí Kíp</span>
+            </button>
+          </nav>
+
+          <!-- Right Action Cluster -->
+          <div class="flex items-center gap-1.5 sm:gap-2 flex-shrink-0 relative">
+            <!-- Live Sheet Sync Button -->
+            <button @click="syncFromGoogleSheet(true)" :disabled="isSyncing" title="Đồng bộ dữ liệu mới nhất từ Google Sheet"
+              class="inline-flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 sm:py-2 text-xs font-bold text-emerald-800 bg-emerald-50 hover:bg-emerald-100 border border-emerald-200/90 rounded-xl transition active:scale-95 disabled:opacity-50">
+              <i class="fa-solid fa-arrows-rotate text-emerald-600" :class="{'fa-spin': isSyncing}"></i>
+              <span class="hidden sm:inline">{{ isSyncing ? 'Đang đồng bộ...' : 'Đồng bộ Sheet' }}</span>
+              <span class="sm:hidden">Sheet</span>
             </button>
 
-            <!-- Copy Zalo Button -->
-            <button @click="copyShareText" title="Sao chép lịch trình gửi Zalo/Messenger" 
-              class="inline-flex items-center gap-1.5 px-3 py-2 text-xs sm:text-sm font-semibold text-emerald-700 bg-emerald-50 hover:bg-emerald-100 border border-emerald-200 rounded-xl transition shadow-sm active:scale-95">
-              <i class="fa-solid fa-share-nodes text-emerald-600"></i>
-              <span class="hidden sm:inline">Gửi Zalo</span>
+            <!-- Quick Share Zalo (Desktop) -->
+            <button @click="copyShareText" title="Copy lịch trình gửi Zalo"
+              class="hidden sm:inline-flex items-center gap-1.5 px-3 py-2 text-xs font-bold text-sky-700 bg-sky-50 hover:bg-sky-100 border border-sky-200 rounded-xl transition active:scale-95">
+              <i class="fa-solid fa-share-nodes"></i>
+              <span>Gửi Zalo</span>
             </button>
 
-            <!-- Print / PDF Button -->
-            <button @click="printItinerary" title="In hoặc lưu file PDF lịch trình" 
-              class="inline-flex items-center gap-1.5 px-3 py-2 text-xs sm:text-sm font-semibold text-slate-700 bg-white hover:bg-slate-100 border border-slate-200 rounded-xl transition shadow-sm active:scale-95">
-              <i class="fa-solid fa-print text-slate-500"></i>
-              <span class="hidden sm:inline">In / PDF</span>
+            <!-- More Tools Dropdown Button -->
+            <button @click="showToolsMenu = !showToolsMenu" title="Tiện ích & Cài đặt"
+              class="inline-flex items-center justify-center w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-200/80 transition active:scale-95">
+              <i class="fa-solid fa-ellipsis-vertical"></i>
             </button>
 
-            <!-- Export / Backup Dropdown or Button -->
-            <button @click="exportJson" title="Tải file dự phòng JSON" 
-              class="inline-flex items-center gap-1.5 px-3 py-2 text-xs sm:text-sm font-semibold text-sky-700 bg-sky-50 hover:bg-sky-100 border border-sky-200 rounded-xl transition shadow-sm active:scale-95">
-              <i class="fa-solid fa-download text-sky-600"></i>
-              <span class="hidden md:inline">Lưu file</span>
-            </button>
-
-            <!-- View Sheet Link -->
-            <a :href="tripData.tripInfo.sheetUrl" target="_blank" title="Mở Google Sheet gốc"
-              class="inline-flex items-center gap-1.5 px-3 py-2 text-xs sm:text-sm font-semibold text-green-700 bg-green-50 hover:bg-green-100 border border-green-200 rounded-xl transition shadow-sm">
-              <i class="fa-solid fa-table text-green-600"></i>
-              <span class="hidden lg:inline">Google Sheet</span>
-            </a>
+            <!-- Dropdown Menu -->
+            <div v-if="showToolsMenu" class="fixed inset-0 z-40" @click="showToolsMenu = false"></div>
+            <div v-if="showToolsMenu" class="absolute right-0 top-11 z-50 w-56 rounded-2xl bg-white shadow-2xl border border-slate-200/90 py-2 text-xs font-semibold text-slate-700 space-y-0.5">
+              <div class="px-3.5 py-1.5 text-[10px] font-bold uppercase tracking-wider text-slate-400 border-b border-slate-100">
+                Tiện ích chuyến đi
+              </div>
+              <button @click="openEditTripInfoModal(); showToolsMenu = false" class="w-full px-3.5 py-2.5 text-left hover:bg-slate-50 flex items-center gap-2.5">
+                <i class="fa-solid fa-pen-to-square text-sky-600 w-4"></i>
+                <span>Sửa thông tin chuyến đi</span>
+              </button>
+              <button @click="copyShareText(); showToolsMenu = false" class="w-full px-3.5 py-2.5 text-left hover:bg-slate-50 flex items-center gap-2.5">
+                <i class="fa-solid fa-share-nodes text-emerald-600 w-4"></i>
+                <span>Copy lịch trình gửi Zalo</span>
+              </button>
+              <button @click="copySettlementText(); showToolsMenu = false" class="w-full px-3.5 py-2.5 text-left hover:bg-slate-50 flex items-center gap-2.5">
+                <i class="fa-solid fa-receipt text-orange-500 w-4"></i>
+                <span>Copy bảng chia tiền nhóm</span>
+              </button>
+              <button @click="printItinerary" class="w-full px-3.5 py-2.5 text-left hover:bg-slate-50 flex items-center gap-2.5">
+                <i class="fa-solid fa-print text-slate-500 w-4"></i>
+                <span>In lịch trình / Xuất PDF</span>
+              </button>
+              <button @click="exportJson(); showToolsMenu = false" class="w-full px-3.5 py-2.5 text-left hover:bg-slate-50 flex items-center gap-2.5">
+                <i class="fa-solid fa-download text-indigo-600 w-4"></i>
+                <span>Tải file sao lưu (.JSON)</span>
+              </button>
+              <a :href="tripData.tripInfo.sheetUrl" target="_blank" @click="showToolsMenu = false" class="w-full px-3.5 py-2.5 text-left hover:bg-slate-50 flex items-center gap-2.5 text-green-700">
+                <i class="fa-solid fa-table text-green-600 w-4"></i>
+                <span>Mở file Google Sheet gốc ↗</span>
+              </a>
+              <div class="border-t border-slate-100 my-1"></div>
+              <button @click="resetToDefault" class="w-full px-3.5 py-2 text-left hover:bg-rose-50 text-rose-600 flex items-center gap-2.5">
+                <i class="fa-solid fa-rotate-left w-4"></i>
+                <span>Khôi phục lịch trình mẫu</span>
+              </button>
+            </div>
           </div>
+
         </div>
 
-        <!-- Navigation Tabs Bar -->
-        <nav class="flex space-x-1 sm:space-x-2 border-t border-slate-100 py-2 overflow-x-auto no-scrollbar text-xs sm:text-sm font-semibold">
-          <button @click="activeTab = 'itinerary'" :class="[activeTab === 'itinerary' ? 'bg-sky-500 text-white shadow-sm' : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100']" class="px-3.5 py-2 rounded-xl transition flex items-center gap-2 whitespace-nowrap">
-            <i class="fa-regular fa-calendar-days"></i>
-            <span>Lịch Trình Chi Tiết</span>
-            <span class="px-1.5 py-0.5 rounded-full text-[10px]" :class="[activeTab === 'itinerary' ? 'bg-white/25 text-white' : 'bg-slate-200 text-slate-700']">
-              {{ tripData.itinerary.length }} ngày
-            </span>
+        <!-- Tablet Navigation Bar (Visible on md, hidden on mobile & lg) -->
+        <nav class="hidden md:flex lg:hidden space-x-1.5 border-t border-slate-100 py-2 overflow-x-auto no-scrollbar text-xs font-bold">
+          <button @click="activeTab = 'itinerary'" :class="[activeTab === 'itinerary' ? 'bg-sky-600 text-white shadow-sm' : 'text-slate-600 hover:bg-slate-100']" class="px-3.5 py-1.5 rounded-xl transition flex items-center gap-1.5 whitespace-nowrap">
+            <i class="fa-regular fa-calendar-check"></i>
+            <span>Lịch Trình ({{ tripData.itinerary.length }} ngày)</span>
           </button>
-
-          <button @click="activeTab = 'explore'" :class="[activeTab === 'explore' ? 'bg-sky-500 text-white shadow-sm' : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100']" class="px-3.5 py-2 rounded-xl transition flex items-center gap-2 whitespace-nowrap">
+          <button @click="activeTab = 'explore'" :class="[activeTab === 'explore' ? 'bg-sky-600 text-white shadow-sm' : 'text-slate-600 hover:bg-slate-100']" class="px-3.5 py-1.5 rounded-xl transition flex items-center gap-1.5 whitespace-nowrap">
             <i class="fa-solid fa-compass"></i>
-            <span>Điểm Đến & Quán Ăn</span>
+            <span>Khám Phá & Quán Ngon</span>
           </button>
-
-          <button @click="activeTab = 'budget'" :class="[activeTab === 'budget' ? 'bg-sky-500 text-white shadow-sm' : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100']" class="px-3.5 py-2 rounded-xl transition flex items-center gap-2 whitespace-nowrap">
+          <button @click="activeTab = 'budget'" :class="[activeTab === 'budget' ? 'bg-sky-600 text-white shadow-sm' : 'text-slate-600 hover:bg-slate-100']" class="px-3.5 py-1.5 rounded-xl transition flex items-center gap-1.5 whitespace-nowrap">
             <i class="fa-solid fa-wallet"></i>
             <span>Chi Phí & Chia Tiền</span>
-            <span class="px-1.5 py-0.5 rounded-full text-[10px]" :class="[activeTab === 'budget' ? 'bg-white/25 text-white' : 'bg-slate-200 text-slate-700']">
-              Split Bill
-            </span>
           </button>
-
-          <button @click="activeTab = 'packing'" :class="[activeTab === 'packing' ? 'bg-sky-500 text-white shadow-sm' : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100']" class="px-3.5 py-2 rounded-xl transition flex items-center gap-2 whitespace-nowrap">
+          <button @click="activeTab = 'packing'" :class="[activeTab === 'packing' ? 'bg-sky-600 text-white shadow-sm' : 'text-slate-600 hover:bg-slate-100']" class="px-3.5 py-1.5 rounded-xl transition flex items-center gap-1.5 whitespace-nowrap">
             <i class="fa-solid fa-suitcase-rolling"></i>
-            <span>Hành Lý & Chuẩn Bị</span>
-            <span class="px-1.5 py-0.5 rounded-full text-[10px]" :class="[activeTab === 'packing' ? 'bg-white/25 text-white' : 'bg-emerald-100 text-emerald-800']">
-              {{ packingProgress }}%
-            </span>
+            <span>Hành Lý ({{ packingProgress }}%)</span>
           </button>
-
-          <button @click="activeTab = 'tips'" :class="[activeTab === 'tips' ? 'bg-sky-500 text-white shadow-sm' : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100']" class="px-3.5 py-2 rounded-xl transition flex items-center gap-2 whitespace-nowrap">
+          <button @click="activeTab = 'tips'" :class="[activeTab === 'tips' ? 'bg-sky-600 text-white shadow-sm' : 'text-slate-600 hover:bg-slate-100']" class="px-3.5 py-1.5 rounded-xl transition flex items-center gap-1.5 whitespace-nowrap">
             <i class="fa-solid fa-lightbulb"></i>
             <span>Bí Kíp Bỏ Túi</span>
           </button>
@@ -141,114 +177,138 @@
       </div>
     </header>
 
-    <!-- HERO BANNER & REAL-TIME COUNTDOWN -->
-    <div class="hero-gradient text-white pt-8 pb-14 px-4 sm:px-6 lg:px-8 shadow-inner relative overflow-hidden">
-      <!-- Background decorative glow -->
-      <div class="absolute -top-24 -right-24 w-96 h-96 bg-orange-400/20 rounded-full blur-3xl pointer-events-none"></div>
-      <div class="absolute -bottom-24 -left-24 w-96 h-96 bg-teal-400/20 rounded-full blur-3xl pointer-events-none"></div>
+    <!-- ========================================== -->
+    <!-- COMPACT BENTO HERO BANNER                  -->
+    <!-- ========================================== -->
+    <div class="hero-gradient text-white pt-4 pb-8 sm:pt-6 sm:pb-12 px-3.5 sm:px-6 lg:px-8 relative overflow-hidden">
+      <div class="absolute -top-24 -right-24 w-80 h-80 bg-orange-400/20 rounded-full blur-3xl pointer-events-none"></div>
+      <div class="absolute -bottom-24 -left-24 w-80 h-80 bg-sky-400/20 rounded-full blur-3xl pointer-events-none"></div>
 
       <div class="max-w-7xl mx-auto relative z-10">
-        <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
-          
-          <!-- Trip Heading & Metadata -->
-          <div class="space-y-3 max-w-2xl">
-            <div class="flex flex-wrap items-center gap-2">
-              <span class="px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-white/20 backdrop-blur-md text-amber-200 border border-white/20">
-                <i class="fa-solid fa-plane-departure mr-1"></i> Vinh / Hà Nội ➔ Sài Gòn ➔ Mũi Né
+        <!-- Top Row: Title + Quick Stats Bar -->
+        <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
+
+          <!-- Left Column: Trip Title & Summary -->
+          <div class="space-y-2 max-w-2xl">
+            <div class="flex flex-wrap items-center gap-1.5">
+              <span class="px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-amber-400/20 text-amber-200 border border-amber-300/30 flex items-center gap-1">
+                <i class="fa-solid fa-plane-departure text-[10px]"></i> Vinh & Hà Nội ➔ Sài Gòn ➔ Mũi Né
               </span>
-              <span class="px-3 py-1 rounded-full text-xs font-semibold bg-rose-500/30 backdrop-blur-md text-white border border-rose-300/30">
-                🎂 Sinh nhật Bún 27/11
+              <span class="px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-rose-500/30 text-white border border-rose-300/30">
+                🎂 Mừng sinh nhật Bún (27/11)
+              </span>
+              <span v-if="hasLocalEdits" class="px-2 py-0.5 rounded-full text-[10px] font-semibold bg-sky-500/30 text-sky-100 border border-sky-300/30">
+                <i class="fa-solid fa-cloud-arrow-up mr-0.5"></i> Đã lưu chỉnh sửa trên máy
               </span>
             </div>
 
-            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-              <h2 class="text-2xl sm:text-4xl font-black tracking-tight leading-tight drop-shadow-sm">
+            <div class="flex items-start justify-between gap-2">
+              <h2 class="text-xl sm:text-3xl font-black tracking-tight leading-snug">
                 {{ tripData.tripInfo.title }}
               </h2>
-              <button @click="openEditTripInfoModal" class="px-3 py-1.5 rounded-xl bg-white/20 hover:bg-white/30 text-white text-xs font-bold transition backdrop-blur-md border border-white/20 flex items-center gap-1.5 self-start active:scale-95" title="Sửa thông tin chuyến đi">
-                <i class="fa-solid fa-pen-to-square"></i>
-                <span>Sửa Chuyến Đi</span>
+              <button @click="openEditTripInfoModal" class="px-2.5 py-1.5 rounded-xl bg-white/15 hover:bg-white/25 text-white text-xs font-bold transition border border-white/20 flex items-center gap-1.5 flex-shrink-0 active:scale-95" title="Sửa thông tin chuyến đi">
+                <i class="fa-solid fa-pen text-[11px]"></i>
+                <span class="hidden sm:inline">Sửa</span>
               </button>
             </div>
 
-            <p class="text-sky-100 text-sm sm:text-base leading-relaxed">
-              {{ tripData.tripInfo.notes }}
-            </p>
-
-            <!-- Flight & Team Breakdown Pill -->
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 pt-2 text-xs">
-              <!-- Team Vinh -->
-              <div class="bg-black/25 backdrop-blur-md rounded-xl p-2.5 border border-white/10 space-y-1">
-                <div class="flex items-center justify-between">
-                  <span class="font-bold text-amber-300 flex items-center gap-1">
-                    <i class="fa-solid fa-plane-departure text-xs"></i> Team Vinh (7 bạn)
-                  </span>
-                  <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-amber-400/20 text-amber-200 border border-amber-300/30">
-                    Bay 08:35
-                  </span>
-                </div>
-                <div class="text-white font-medium text-[11px] leading-relaxed">
-                  Diệu, Ly, Cường, Linh, Huy, Huyền, Thương
+            <!-- Quick KPI Strip (Always visible on mobile & desktop) -->
+            <div class="grid grid-cols-3 gap-2 pt-1">
+              <div @click="activeTab = 'itinerary'" class="glass-card-dark rounded-xl p-2 sm:p-2.5 cursor-pointer hover:bg-white/10 transition">
+                <div class="text-[10px] text-sky-200 font-medium">Tiến độ lịch trình</div>
+                <div class="text-xs sm:text-sm font-extrabold text-white mt-0.5 flex items-center gap-1">
+                  <i class="fa-solid fa-circle-check text-emerald-400 text-xs"></i>
+                  <span>{{ completedActivitiesCount }}/{{ totalActivitiesCount }} mục</span>
                 </div>
               </div>
-
-              <!-- Team Hà Nội -->
-              <div class="bg-black/25 backdrop-blur-md rounded-xl p-2.5 border border-white/10 space-y-1">
-                <div class="flex items-center justify-between">
-                  <span class="font-bold text-sky-300 flex items-center gap-1">
-                    <i class="fa-solid fa-plane-departure text-xs"></i> Team Hà Nội
-                  </span>
-                  <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-sky-400/20 text-sky-200 border border-sky-300/30">
-                    Bay 09:40
-                  </span>
-                </div>
-                <div class="text-white font-medium text-[11px] leading-relaxed">
-                  Hiếu (Hạ cánh ~11:45 SGN ➔ 12h nhập đoàn)
+              <div @click="activeTab = 'budget'" class="glass-card-dark rounded-xl p-2 sm:p-2.5 cursor-pointer hover:bg-white/10 transition">
+                <div class="text-[10px] text-sky-200 font-medium">Tổng chi thực tế</div>
+                <div class="text-xs sm:text-sm font-extrabold text-amber-300 mt-0.5 truncate">
+                  {{ formatCurrency(totalExpenseActual) }}
                 </div>
               </div>
+              <div @click="activeTab = 'packing'" class="glass-card-dark rounded-xl p-2 sm:p-2.5 cursor-pointer hover:bg-white/10 transition">
+                <div class="text-[10px] text-sky-200 font-medium">Chuẩn bị đồ</div>
+                <div class="text-xs sm:text-sm font-extrabold text-emerald-300 mt-0.5">
+                  {{ packingProgress }}% vali
+                </div>
+              </div>
+            </div>
+
+            <!-- Mobile Toggle for Flight & Team Details -->
+            <div class="pt-1 lg:hidden">
+              <button @click="showHeroDetails = !showHeroDetails" class="text-xs font-bold text-sky-200 hover:text-white flex items-center gap-1.5 py-1">
+                <i class="fa-solid" :class="[showHeroDetails ? 'fa-chevron-up' : 'fa-chevron-down']"></i>
+                <span>{{ showHeroDetails ? 'Thu gọn giờ bay & danh sách đoàn' : 'Xem giờ bay 2 team & đếm ngược' }}</span>
+              </button>
             </div>
           </div>
 
-          <!-- Real-time Countdown Card -->
-          <div class="glass-card-light rounded-3xl p-5 sm:p-6 shadow-2xl lg:min-w-[360px] border border-white/20">
-            <div class="flex items-center justify-between mb-3.5">
-              <span class="text-xs font-bold uppercase tracking-wider text-amber-300 flex items-center gap-2">
-                <i class="fa-solid fa-stopwatch animate-pulse text-sm"></i> Đếm Ngược Khởi Hành
-              </span>
-              <span class="text-xs text-sky-100 font-semibold px-2.5 py-0.5 rounded-full bg-white/15 border border-white/10">
-                {{ tripData.tripInfo.startDate }}
-              </span>
+          <!-- Right Column: Countdown & Flights Bento (Always visible on lg, toggleable on mobile) -->
+          <div :class="[showHeroDetails ? 'block' : 'hidden lg:block']" class="lg:w-[440px] space-y-2.5">
+            <!-- Countdown / Live Status Box -->
+            <div class="glass-card-light rounded-2xl p-3.5 sm:p-4 border border-white/20 shadow-xl">
+              <div class="flex items-center justify-between mb-2">
+                <span class="text-[11px] font-bold uppercase tracking-wider text-amber-300 flex items-center gap-1.5">
+                  <i class="fa-solid fa-stopwatch animate-pulse"></i>
+                  <span>{{ countdown.isPast ? 'Trạng thái chuyến đi' : 'Đếm ngược khởi hành' }}</span>
+                </span>
+                <span class="text-[11px] text-sky-100 font-semibold px-2 py-0.5 rounded-full bg-white/15">
+                  27/11 – 30/11/2026
+                </span>
+              </div>
+
+              <div v-if="!countdown.isPast" class="grid grid-cols-4 gap-2 text-center">
+                <div class="bg-black/30 rounded-xl py-2 px-1 border border-white/15">
+                  <span class="block text-xl sm:text-2xl font-black text-amber-300">{{ countdown.days }}</span>
+                  <span class="text-[10px] text-sky-200 font-bold uppercase">Ngày</span>
+                </div>
+                <div class="bg-black/30 rounded-xl py-2 px-1 border border-white/15">
+                  <span class="block text-xl sm:text-2xl font-black text-white">{{ String(countdown.hours).padStart(2, '0') }}</span>
+                  <span class="text-[10px] text-sky-200 font-bold uppercase">Giờ</span>
+                </div>
+                <div class="bg-black/30 rounded-xl py-2 px-1 border border-white/15">
+                  <span class="block text-xl sm:text-2xl font-black text-white">{{ String(countdown.minutes).padStart(2, '0') }}</span>
+                  <span class="text-[10px] text-sky-200 font-bold uppercase">Phút</span>
+                </div>
+                <div class="bg-black/30 rounded-xl py-2 px-1 border border-white/15">
+                  <span class="block text-xl sm:text-2xl font-black text-amber-200">{{ String(countdown.seconds).padStart(2, '0') }}</span>
+                  <span class="text-[10px] text-sky-200 font-bold uppercase">Giây</span>
+                </div>
+              </div>
+              <div v-else class="bg-emerald-500/25 border border-emerald-300/30 rounded-xl p-2.5 text-xs font-bold text-emerald-100 flex items-center gap-2">
+                <span class="text-base">🌴</span>
+                <span>Chuyến đi đang diễn ra! Chúc cả đoàn có những kỷ niệm thật tuyệt vời!</span>
+              </div>
             </div>
 
-            <!-- Countdown numbers -->
-            <div class="grid grid-cols-4 gap-2.5 text-center">
-              <div class="bg-black/30 backdrop-blur-md rounded-2xl p-2.5 sm:p-3 border border-white/15 shadow-inner">
-                <span class="block text-2xl sm:text-3xl font-black text-amber-300">{{ countdown.days }}</span>
-                <span class="text-[10px] sm:text-xs text-sky-200 font-bold uppercase tracking-wider">Ngày</span>
+            <!-- 2 Team Flights Cards -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
+              <div class="glass-card-dark rounded-xl p-2.5 border border-white/15">
+                <div class="flex items-center justify-between">
+                  <span class="font-bold text-amber-300 flex items-center gap-1">
+                    <i class="fa-solid fa-plane text-[10px]"></i> Team Vinh (7)
+                  </span>
+                  <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-amber-400/25 text-amber-200">
+                    Bay 08:35
+                  </span>
+                </div>
+                <p class="text-[11px] text-slate-200 mt-1 leading-snug">
+                  Diệu, Ly, Cường, Linh, Huy, Huyền, Thương (Đáp ~10:25)
+                </p>
               </div>
-              <div class="bg-black/30 backdrop-blur-md rounded-2xl p-2.5 sm:p-3 border border-white/15 shadow-inner">
-                <span class="block text-2xl sm:text-3xl font-black text-white">{{ String(countdown.hours).padStart(2, '0') }}</span>
-                <span class="text-[10px] sm:text-xs text-sky-200 font-bold uppercase tracking-wider">Giờ</span>
-              </div>
-              <div class="bg-black/30 backdrop-blur-md rounded-2xl p-2.5 sm:p-3 border border-white/15 shadow-inner">
-                <span class="block text-2xl sm:text-3xl font-black text-white">{{ String(countdown.minutes).padStart(2, '0') }}</span>
-                <span class="text-[10px] sm:text-xs text-sky-200 font-bold uppercase tracking-wider">Phút</span>
-              </div>
-              <div class="bg-black/30 backdrop-blur-md rounded-2xl p-2.5 sm:p-3 border border-white/15 shadow-inner">
-                <span class="block text-2xl sm:text-3xl font-black text-amber-200">{{ String(countdown.seconds).padStart(2, '0') }}</span>
-                <span class="text-[10px] sm:text-xs text-sky-200 font-bold uppercase tracking-wider">Giây</span>
-              </div>
-            </div>
-
-            <!-- Quick Trip Stats bar -->
-            <div class="mt-4 pt-3.5 border-t border-white/15 grid grid-cols-2 gap-3 text-xs">
-              <div class="bg-white/10 rounded-xl p-2.5">
-                <span class="text-sky-200 block text-[11px] font-medium">Dự toán quỹ nhóm:</span>
-                <span class="font-extrabold text-amber-300 text-sm mt-0.5 block">{{ formatCurrency(totalExpenseActual) }}</span>
-              </div>
-              <div class="bg-white/10 rounded-xl p-2.5 text-right">
-                <span class="text-sky-200 block text-[11px] font-medium">Đã chuẩn bị đồ:</span>
-                <span class="font-extrabold text-emerald-300 text-sm mt-0.5 block">{{ packingProgress }}% xong</span>
+              <div class="glass-card-dark rounded-xl p-2.5 border border-white/15">
+                <div class="flex items-center justify-between">
+                  <span class="font-bold text-sky-300 flex items-center gap-1">
+                    <i class="fa-solid fa-plane text-[10px]"></i> Team Hà Nội (1)
+                  </span>
+                  <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-sky-400/25 text-sky-200">
+                    Bay 09:40
+                  </span>
+                </div>
+                <p class="text-[11px] text-slate-200 mt-1 leading-snug">
+                  Hiếu (Đáp ~11:45 SGN ➔ 12:00 lên xe Limousine)
+                </p>
               </div>
             </div>
           </div>
@@ -257,189 +317,218 @@
       </div>
     </div>
 
-    
-
-    <!-- MAIN BODY CONTAINER -->
-    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-6 mb-16 flex-grow w-full relative z-20">
+    <!-- ========================================== -->
+    <!-- MAIN WORKSPACE CONTAINER                   -->
+    <!-- ========================================== -->
+    <main class="max-w-7xl mx-auto px-3.5 sm:px-6 lg:px-8 -mt-4 sm:-mt-6 flex-grow w-full relative z-20">
 
       <!-- ========================================== -->
       <!-- TAB 1: LỊCH TRÌNH CHI TIẾT (ITINERARY)      -->
       <!-- ========================================== -->
-      <section v-if="activeTab === 'itinerary'" class="space-y-6">
-        
-        <!-- Day Filter Tabs & Add Action -->
-        <div class="glass-panel rounded-2xl p-3 sm:p-4 shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-3">
-          
-          <!-- Days Pill List -->
-          <div class="flex items-center gap-1.5 sm:gap-2 overflow-x-auto pb-1 sm:pb-0 no-scrollbar">
-            <button 
-              v-for="(day, idx) in tripData.itinerary" 
-              :key="day.day" 
-              @click="selectedDayIndex = idx"
-              :class="[selectedDayIndex === idx ? 'bg-sky-600 text-white font-bold shadow-md shadow-sky-500/25 scale-[1.02]' : 'bg-slate-100 text-slate-700 hover:bg-slate-200 font-semibold']"
-              class="px-3.5 py-2 rounded-xl text-xs sm:text-sm transition flex items-center gap-1.5 whitespace-nowrap">
-              <span>Ngày {{ day.day }}</span>
-              <span class="text-[11px] opacity-80">({{ day.date }})</span>
-            </button>
+      <section v-if="activeTab === 'itinerary'" class="space-y-4 sm:space-y-5">
 
-            <!-- All Days view button -->
-            <button 
-              @click="selectedDayIndex = -1"
-              :class="[selectedDayIndex === -1 ? 'bg-sky-600 text-white font-bold shadow-md shadow-sky-500/25' : 'bg-slate-100 text-slate-700 hover:bg-slate-200 font-semibold']"
-              class="px-3.5 py-2 rounded-xl text-xs sm:text-sm transition whitespace-nowrap">
-              Xem Toàn Bộ
-            </button>
+        <!-- Sticky Day Selector & Search Bar -->
+        <div class="glass-panel rounded-2xl p-2.5 sm:p-3.5 shadow-md space-y-2.5 sticky top-14 sm:top-16 z-30">
+          <div class="flex items-center justify-between gap-2">
+            <!-- Horizontal Day Pills -->
+            <div class="flex items-center gap-1.5 overflow-x-auto no-scrollbar py-0.5">
+              <button
+                v-for="(day, idx) in tripData.itinerary"
+                :key="day.day"
+                @click="selectedDayIndex = idx"
+                :class="[selectedDayIndex === idx ? 'bg-sky-600 text-white font-extrabold shadow-md shadow-sky-500/25' : 'bg-slate-100 text-slate-700 hover:bg-slate-200 font-semibold']"
+                class="px-3 py-2 rounded-xl text-xs transition flex items-center gap-1.5 whitespace-nowrap flex-shrink-0">
+                <span>Ngày {{ day.day }}</span>
+                <span class="text-[10px] px-1.5 py-0.2 rounded-full" :class="[selectedDayIndex === idx ? 'bg-white/20 text-white' : 'bg-slate-200/80 text-slate-600']">
+                  {{ day.date.substring(0, 5) }}
+                </span>
+              </button>
+
+              <button
+                @click="selectedDayIndex = -1"
+                :class="[selectedDayIndex === -1 ? 'bg-sky-600 text-white font-extrabold shadow-md shadow-sky-500/25' : 'bg-slate-100 text-slate-700 hover:bg-slate-200 font-semibold']"
+                class="px-3 py-2 rounded-xl text-xs transition whitespace-nowrap flex-shrink-0">
+                Tất cả ({{ totalActivitiesCount }})
+              </button>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="hidden sm:flex items-center gap-1.5 flex-shrink-0">
+              <button @click="openAddActivityModal()" class="inline-flex items-center gap-1.5 px-3.5 py-2 bg-orange-500 hover:bg-orange-600 text-white rounded-xl text-xs font-bold transition shadow-sm active:scale-95">
+                <i class="fa-solid fa-plus"></i>
+                <span>Thêm Hoạt Động</span>
+              </button>
+              <button @click="addNewDay" class="inline-flex items-center gap-1 px-2.5 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-xs font-bold transition" title="Thêm ngày mới">
+                <i class="fa-solid fa-calendar-plus"></i>
+                <span class="hidden md:inline">+Ngày</span>
+              </button>
+            </div>
           </div>
 
-          <!-- Add activity or add day -->
-          <div class="flex items-center gap-2">
-            <button @click="openAddActivityModal()" class="inline-flex items-center gap-1.5 px-3.5 py-2 bg-orange-500 hover:bg-orange-600 text-white rounded-xl text-xs sm:text-sm font-semibold transition shadow-md shadow-orange-500/20 active:scale-95">
-              <i class="fa-solid fa-plus"></i>
-              <span>Thêm Hoạt Động</span>
-            </button>
-            <button @click="addNewDay" class="inline-flex items-center gap-1 px-3 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-xs sm:text-sm font-semibold transition">
-              <i class="fa-solid fa-calendar-plus"></i>
-              <span>Thêm Ngày</span>
-            </button>
+          <!-- Quick Filter & Search Strip -->
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pt-1 border-t border-slate-100">
+            <!-- Category Filter Chips -->
+            <div class="flex items-center gap-1 overflow-x-auto no-scrollbar text-[11px] font-bold">
+              <button @click="activityCatFilter = 'all'" :class="[activityCatFilter === 'all' ? 'bg-slate-800 text-white' : 'bg-slate-100 text-slate-600 hover:bg-slate-200']" class="px-2.5 py-1 rounded-lg transition whitespace-nowrap">
+                Tất cả
+              </button>
+              <button @click="activityCatFilter = 'transport'" :class="[activityCatFilter === 'transport' ? 'bg-sky-600 text-white' : 'bg-sky-50 text-sky-700 hover:bg-sky-100']" class="px-2.5 py-1 rounded-lg transition whitespace-nowrap flex items-center gap-1">
+                <i class="fa-solid fa-plane-up text-[10px]"></i> Di chuyển
+              </button>
+              <button @click="activityCatFilter = 'food'" :class="[activityCatFilter === 'food' ? 'bg-amber-600 text-white' : 'bg-amber-50 text-amber-700 hover:bg-amber-100']" class="px-2.5 py-1 rounded-lg transition whitespace-nowrap flex items-center gap-1">
+                <i class="fa-solid fa-utensils text-[10px]"></i> Ăn uống
+              </button>
+              <button @click="activityCatFilter = 'activity'" :class="[activityCatFilter === 'activity' ? 'bg-purple-600 text-white' : 'bg-purple-50 text-purple-700 hover:bg-purple-100']" class="px-2.5 py-1 rounded-lg transition whitespace-nowrap flex items-center gap-1">
+                <i class="fa-solid fa-car-side text-[10px]"></i> Vui chơi
+              </button>
+              <button @click="activityCatFilter = 'rest'" :class="[activityCatFilter === 'rest' ? 'bg-teal-600 text-white' : 'bg-teal-50 text-teal-700 hover:bg-teal-100']" class="px-2.5 py-1 rounded-lg transition whitespace-nowrap flex items-center gap-1">
+                <i class="fa-solid fa-bed text-[10px]"></i> Lưu trú
+              </button>
+            </div>
+
+            <!-- Search Input -->
+            <div class="relative flex-shrink-0 sm:w-56">
+              <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
+              <input v-model="activitySearch" type="text" placeholder="Tìm món ăn, địa điểm..." class="w-full pl-8 pr-7 py-1.5 rounded-xl bg-slate-100/90 border border-slate-200/80 text-xs focus:bg-white focus:outline-none focus:ring-2 focus:ring-sky-500">
+              <button v-if="activitySearch" @click="activitySearch = ''" class="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600">
+                <i class="fa-solid fa-circle-xmark text-xs"></i>
+              </button>
+            </div>
           </div>
         </div>
 
         <!-- Render Days -->
-        <div class="space-y-8">
-          
-          <!-- Iterate over days (either selected day or all) -->
-          <div 
-            v-for="(day, dIdx) in (selectedDayIndex === -1 ? tripData.itinerary : [currentDay])" 
+        <div class="space-y-6">
+          <div
+            v-for="(day, dIdx) in (selectedDayIndex === -1 ? tripData.itinerary : [currentDay])"
             :key="day.day"
-            class="space-y-4">
-            
-            <!-- Day Header Card -->
-            <div class="bg-gradient-to-r from-slate-900 to-slate-800 text-white p-4 sm:p-5 rounded-2xl shadow-md flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-              <div>
-                <div class="flex items-center gap-2">
-                  <span class="px-2.5 py-0.5 rounded-full text-xs font-extrabold bg-sky-500 text-white">
+            class="space-y-3.5">
+
+            <!-- Day Summary Header Card -->
+            <div class="bg-gradient-to-r from-slate-900 via-slate-800 to-sky-950 text-white p-4 sm:p-5 rounded-2xl shadow-md flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+              <div class="space-y-1">
+                <div class="flex flex-wrap items-center gap-2">
+                  <span class="px-2.5 py-0.5 rounded-lg text-xs font-black bg-sky-500 text-white tracking-wide">
                     NGÀY {{ day.day }}
                   </span>
-                  <span class="text-xs text-slate-300 font-medium">{{ day.date }}</span>
-                  <span v-if="day.day === 1" class="text-xs px-2 py-0.5 bg-rose-500/80 rounded-full font-bold">🎂 Birthday Bún</span>
+                  <span class="text-xs text-sky-200 font-semibold">{{ day.date }}</span>
+                  <span v-if="day.day === 1" class="text-[11px] px-2 py-0.5 bg-rose-500/90 rounded-full font-bold">
+                    🎂 Tối mừng sinh nhật Bún
+                  </span>
                 </div>
-                <div class="flex items-center justify-between gap-2 mt-1">
-                  <h3 class="text-base sm:text-lg font-bold text-white">
-                    {{ day.dateTitle }}
-                  </h3>
-                  <button @click="editDay(day)" class="px-2.5 py-1 rounded-lg bg-white/10 hover:bg-white/20 text-sky-300 text-xs font-semibold transition border border-white/10 flex items-center gap-1 active:scale-95" title="Sửa tên ngày & khách sạn">
-                    <i class="fa-solid fa-pen-to-square"></i>
-                    <span>Sửa ngày</span>
-                  </button>
-                </div>
-                <div v-if="day.hotel" class="text-xs text-amber-300 flex items-center gap-1.5 mt-1 font-medium">
-                  <i class="fa-solid fa-hotel"></i> Lưu trú: {{ day.hotel }}
+                <h3 class="text-base sm:text-xl font-extrabold text-white leading-snug pt-0.5">
+                  {{ day.dateTitle }}
+                </h3>
+                <div v-if="day.hotel" class="pt-0.5">
+                  <a :href="'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(day.hotel)" target="_blank" class="inline-flex items-center gap-1.5 text-xs text-amber-300 hover:text-amber-200 font-semibold">
+                    <i class="fa-solid fa-hotel"></i>
+                    <span>Lưu trú: {{ day.hotel }}</span>
+                    <i class="fa-solid fa-arrow-up-right-from-square text-[10px] opacity-75"></i>
+                  </a>
                 </div>
               </div>
 
-              <!-- Day statistics -->
-              <div class="flex items-center gap-3 text-xs bg-white/10 px-3.5 py-2 rounded-xl backdrop-blur-sm self-start sm:self-auto">
-                <div>
-                  <span class="text-slate-400 block text-[10px]">Hoạt động:</span>
-                  <span class="font-bold text-white text-sm">{{ day.activities.length }} mục</span>
+              <!-- Right Day Actions & Progress -->
+              <div class="flex items-center justify-between sm:justify-end gap-2.5 pt-2 sm:pt-0 border-t border-white/10 sm:border-0">
+                <div class="bg-white/10 px-3 py-1.5 rounded-xl text-xs">
+                  <span class="text-slate-300 text-[11px]">Hoàn thành: </span>
+                  <strong class="text-emerald-400">{{ day.activities.filter(a => a.done).length }}/{{ day.activities.length }}</strong>
                 </div>
-                <div class="w-px h-6 bg-white/20"></div>
-                <div>
-                  <span class="text-slate-400 block text-[10px]">Tiến độ:</span>
-                  <span class="font-bold text-emerald-400 text-sm">
-                    {{ day.activities.filter(a => a.done).length }}/{{ day.activities.length }} xong
-                  </span>
-                </div>
+                <button @click="editDay(day)" class="px-3 py-1.5 rounded-xl bg-white/10 hover:bg-white/20 text-sky-200 text-xs font-bold transition border border-white/15 flex items-center gap-1.5 active:scale-95">
+                  <i class="fa-solid fa-pen-to-square"></i>
+                  <span>Sửa ngày</span>
+                </button>
+                <button @click="openAddActivityModal(selectedDayIndex === -1 ? dIdx : selectedDayIndex)" class="px-3 py-1.5 rounded-xl bg-orange-500 hover:bg-orange-600 text-white text-xs font-bold transition shadow-sm flex items-center gap-1 active:scale-95">
+                  <i class="fa-solid fa-plus"></i>
+                  <span>Thêm mục</span>
+                </button>
               </div>
             </div>
 
             <!-- Empty State for Day -->
-            <div v-if="day.activities.length === 0" class="bg-white p-8 rounded-2xl border border-dashed border-slate-300 text-center space-y-3">
-              <div class="text-3xl text-slate-400">🏖️</div>
-              <p class="text-slate-600 font-medium text-sm">Chưa có hoạt động nào cho ngày này.</p>
-              <button @click="openAddActivityModal(dIdx)" class="px-4 py-2 bg-sky-500 hover:bg-sky-600 text-white text-xs font-semibold rounded-xl">
-                + Thêm hoạt động đầu tiên
+            <div v-if="filterDayActivities(day.activities).length === 0" class="bg-white p-8 rounded-2xl border border-dashed border-slate-300 text-center space-y-2.5">
+              <div class="text-3xl">🏖️</div>
+              <p class="text-slate-600 font-bold text-sm">Không tìm thấy hoạt động nào phù hợp.</p>
+              <button @click="activitySearch = ''; activityCatFilter = 'all'; openAddActivityModal(selectedDayIndex === -1 ? dIdx : selectedDayIndex)" class="px-4 py-2 bg-sky-600 hover:bg-sky-700 text-white text-xs font-bold rounded-xl transition">
+                + Thêm hoạt động mới
               </button>
             </div>
 
-            <!-- Activities Timeline -->
-            <div v-else class="relative pl-6 sm:pl-8 space-y-4">
-              <!-- Timeline vertical line -->
+            <!-- Activities Timeline List -->
+            <div v-else class="relative pl-6 sm:pl-8 space-y-3">
               <div class="timeline-stem"></div>
 
-              <!-- Activity Card -->
-              <div 
-                v-for="act in day.activities" 
-                :key="act.id" 
-                :class="[act.done ? 'bg-slate-50/80 opacity-75 border-slate-200' : 'bg-white border-slate-200/90 shadow-sm']"
-                class="relative rounded-2xl border p-4 sm:p-5 card-hover transition">
-                
-                <!-- Timeline bullet node -->
-                <button 
+              <div
+                v-for="act in filterDayActivities(day.activities)"
+                :key="act.id"
+                :class="[act.done ? 'bg-slate-50/90 border-slate-200/80 opacity-80' : 'bg-white border-slate-200/90 shadow-sm']"
+                class="relative rounded-2xl border p-3.5 sm:p-4 card-hover transition">
+
+                <!-- Timeline Check Node -->
+                <button
                   @click="toggleActivityDone(act)"
-                  title="Bấm để đánh dấu hoàn thành"
-                  :class="[act.done ? 'bg-emerald-500 text-white ring-4 ring-emerald-100' : 'bg-white text-slate-400 hover:text-emerald-500 border-2 border-slate-300 hover:border-emerald-500']"
-                  class="absolute -left-6 sm:-left-8 top-5 -translate-x-1/2 w-6 h-6 rounded-full flex items-center justify-center text-xs transition z-10">
+                  title="Đánh dấu hoàn thành"
+                  :class="[act.done ? 'bg-emerald-500 text-white ring-4 ring-emerald-100' : 'bg-white text-slate-400 hover:text-emerald-600 border-2 border-sky-400 hover:border-emerald-500 shadow-xs']"
+                  class="absolute -left-6 sm:-left-8 top-4 -translate-x-1/2 w-6 h-6 rounded-full flex items-center justify-center text-xs transition z-10">
                   <i v-if="act.done" class="fa-solid fa-check text-[10px]"></i>
-                  <span v-else class="w-1.5 h-1.5 bg-slate-300 rounded-full"></span>
+                  <span v-else class="w-2 h-2 bg-sky-500 rounded-full"></span>
                 </button>
 
-                <!-- Activity Content Header -->
-                <div class="flex flex-col sm:flex-row sm:items-start justify-between gap-2">
-                  
-                  <div class="space-y-1">
-                    <div class="flex flex-wrap items-center gap-2">
-                      <!-- Time Badge -->
-                      <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-xl text-xs font-extrabold bg-sky-50 text-sky-800 border border-sky-200/80 tracking-wide shadow-2xs">
-                        <i class="fa-regular fa-clock text-xs text-sky-600"></i>
+                <!-- Main Activity Row -->
+                <div class="flex items-start justify-between gap-2">
+                  <div class="space-y-1.5 min-w-0 flex-1">
+                    <!-- Badges Row -->
+                    <div class="flex flex-wrap items-center gap-1.5">
+                      <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-lg text-xs font-black bg-sky-50 text-sky-800 border border-sky-200/80">
+                        <i class="fa-regular fa-clock text-[10px] text-sky-600"></i>
                         {{ act.time }}
                       </span>
 
-                      <!-- Category Badge -->
-                      <span :class="getCategoryBadge(act.category).bg" class="px-2.5 py-0.5 rounded-full text-[11px] font-bold border">
-                        {{ getCategoryBadge(act.category).label }}
+                      <span :class="getCategoryBadge(act.category).bg" class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[11px] font-bold border">
+                        <i :class="getCategoryBadge(act.category).icon" class="text-[10px]"></i>
+                        <span>{{ getCategoryBadge(act.category).label }}</span>
                       </span>
 
-                      <!-- Cost Pill if any -->
-                      <span v-if="act.cost > 0" class="text-xs font-semibold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-md border border-emerald-100">
+                      <span v-if="act.cost > 0" class="inline-flex items-center gap-1 text-xs font-extrabold text-emerald-700 bg-emerald-50 px-2.5 py-0.5 rounded-lg border border-emerald-200/70">
                         {{ formatCurrency(act.cost) }}
                       </span>
                     </div>
 
-                    <!-- Title -->
-                    <h4 :class="{'line-through text-slate-400': act.done}" class="text-base sm:text-lg font-bold text-slate-800 capitalize pt-1">
+                    <!-- Activity Title -->
+                    <h4 :class="{'line-through text-slate-400': act.done}" class="text-sm sm:text-base font-extrabold text-slate-900 capitalize leading-snug">
                       {{ act.title }}
                     </h4>
                   </div>
 
-                  <!-- Actions Dropdown / Buttons -->
-                  <div class="flex items-center gap-1 self-end sm:self-start action-btn">
-                    <button @click="editActivity(day, act)" class="p-1.5 text-slate-400 hover:text-sky-600 hover:bg-slate-100 rounded-lg transition active:scale-90" title="Chỉnh sửa">
-                      <i class="fa-solid fa-pen-to-square text-sm"></i>
+                  <!-- Edit & Delete Buttons (Always visible on mobile & desktop) -->
+                  <div class="flex items-center gap-1 flex-shrink-0 action-btn">
+                    <button @click="editActivity(day, act)" class="w-8 h-8 rounded-xl text-slate-500 hover:text-sky-600 bg-slate-50 hover:bg-sky-50 border border-slate-200/70 flex items-center justify-center transition active:scale-90" title="Chỉnh sửa">
+                      <i class="fa-solid fa-pen text-xs"></i>
                     </button>
-                    <button @click="deleteActivity(day, act.id)" class="p-1.5 text-slate-400 hover:text-rose-600 hover:bg-slate-100 rounded-lg transition active:scale-90" title="Xóa">
-                      <i class="fa-solid fa-trash-can text-sm"></i>
+                    <button @click="deleteActivity(day, act.id)" class="w-8 h-8 rounded-xl text-slate-500 hover:text-rose-600 bg-slate-50 hover:bg-rose-50 border border-slate-200/70 flex items-center justify-center transition active:scale-90" title="Xóa">
+                      <i class="fa-solid fa-trash-can text-xs"></i>
                     </button>
                   </div>
                 </div>
 
-                <!-- Location with Google Maps search link -->
-                <div v-if="act.location" class="mt-2 text-xs sm:text-sm text-slate-600 flex items-center gap-1.5">
-                  <i class="fa-solid fa-location-dot text-rose-500"></i>
-                  <a :href="'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(act.location)" target="_blank" class="hover:text-sky-600 hover:underline font-medium text-slate-700">
-                    {{ act.location }}
+                <!-- Location Chip (1-Tap Google Maps) -->
+                <div v-if="act.location" class="mt-2">
+                  <a :href="'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(act.location)" target="_blank"
+                    class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-xl bg-rose-50/80 hover:bg-rose-100/80 text-rose-700 border border-rose-200/60 text-xs font-semibold transition max-w-full">
+                    <i class="fa-solid fa-location-dot text-rose-500 flex-shrink-0"></i>
+                    <span class="truncate">{{ act.location }}</span>
+                    <span class="text-[10px] text-rose-500 font-bold flex-shrink-0">• Bản đồ ↗</span>
                   </a>
-                  <span class="text-[10px] text-slate-400">(Xem bản đồ)</span>
                 </div>
 
-                <!-- Notes & details -->
-                <div v-if="act.notes" class="mt-2.5 text-xs sm:text-sm text-slate-600 leading-relaxed bg-slate-50/90 border-l-4 border-sky-400 p-3 rounded-r-xl whitespace-pre-line">
+                <!-- Notes Callout -->
+                <div v-if="act.notes" class="mt-2.5 text-xs sm:text-sm text-slate-600 leading-relaxed bg-slate-50/90 border-l-4 border-sky-400 px-3 py-2 rounded-r-xl whitespace-pre-line">
                   {{ act.notes }}
                 </div>
 
-                <!-- Tip callout -->
-                <div v-if="act.tip" class="mt-2 text-xs text-amber-800 bg-amber-50/80 border border-amber-200/70 p-2.5 rounded-xl flex items-start gap-2">
-                  <i class="fa-regular fa-lightbulb text-amber-600 mt-0.5 text-sm flex-shrink-0"></i>
+                <!-- Tip Callout -->
+                <div v-if="act.tip" class="mt-2 text-xs text-amber-900 bg-amber-50/90 border border-amber-200/70 px-3 py-2 rounded-xl flex items-start gap-2">
+                  <i class="fa-solid fa-lightbulb text-amber-500 mt-0.5 flex-shrink-0"></i>
                   <span class="font-medium leading-relaxed">{{ act.tip }}</span>
                 </div>
 
@@ -447,72 +536,69 @@
             </div>
 
           </div>
-
         </div>
-
       </section>
 
       <!-- ========================================== -->
       <!-- TAB 2: ĐIỂM ĐẾN & QUÁN ĂN (EXPLORE)         -->
       <!-- ========================================== -->
-      <section v-if="activeTab === 'explore'" class="space-y-6">
-        
-        <!-- Filter bar -->
-        <div class="glass-panel p-4 rounded-2xl shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-          <div class="flex items-center gap-1.5 overflow-x-auto pb-1 sm:pb-0 no-scrollbar">
-            <button @click="filterRecType = 'all'" :class="[filterRecType === 'all' ? 'bg-sky-500 text-white font-bold' : 'bg-slate-100 text-slate-700 hover:bg-slate-200']" class="px-3.5 py-1.5 rounded-xl text-xs sm:text-sm transition whitespace-nowrap">
+      <section v-if="activeTab === 'explore'" class="space-y-4 sm:space-y-5">
+
+        <!-- Filter Bar -->
+        <div class="glass-panel p-3 sm:p-4 rounded-2xl shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 sticky top-14 sm:top-16 z-30">
+          <div class="flex items-center gap-1.5 overflow-x-auto no-scrollbar">
+            <button @click="filterRecType = 'all'" :class="[filterRecType === 'all' ? 'bg-sky-600 text-white font-bold shadow-sm' : 'bg-slate-100 text-slate-700 hover:bg-slate-200 font-semibold']" class="px-3.5 py-1.5 rounded-xl text-xs transition whitespace-nowrap">
               Tất Cả ({{ tripData.recommendations.length }})
             </button>
-            <button @click="filterRecType = 'sightseeing'" :class="[filterRecType === 'sightseeing' ? 'bg-sky-500 text-white font-bold' : 'bg-slate-100 text-slate-700 hover:bg-slate-200']" class="px-3.5 py-1.5 rounded-xl text-xs sm:text-sm transition whitespace-nowrap">
+            <button @click="filterRecType = 'sightseeing'" :class="[filterRecType === 'sightseeing' ? 'bg-sky-600 text-white font-bold shadow-sm' : 'bg-slate-100 text-slate-700 hover:bg-slate-200 font-semibold']" class="px-3.5 py-1.5 rounded-xl text-xs transition whitespace-nowrap">
               🏛️ Check-in & Resort
             </button>
-            <button @click="filterRecType = 'food'" :class="[filterRecType === 'food' ? 'bg-sky-500 text-white font-bold' : 'bg-slate-100 text-slate-700 hover:bg-slate-200']" class="px-3.5 py-1.5 rounded-xl text-xs sm:text-sm transition whitespace-nowrap">
+            <button @click="filterRecType = 'food'" :class="[filterRecType === 'food' ? 'bg-sky-600 text-white font-bold shadow-sm' : 'bg-slate-100 text-slate-700 hover:bg-slate-200 font-semibold']" class="px-3.5 py-1.5 rounded-xl text-xs transition whitespace-nowrap">
               🦞 Hải Sản & Quán Ngon
             </button>
-            <button @click="filterRecType = 'chill'" :class="[filterRecType === 'chill' ? 'bg-sky-500 text-white font-bold' : 'bg-slate-100 text-slate-700 hover:bg-slate-200']" class="px-3.5 py-1.5 rounded-xl text-xs sm:text-sm transition whitespace-nowrap">
-              ☕ Cafe Sống Ảo View Biển
+            <button @click="filterRecType = 'chill'" :class="[filterRecType === 'chill' ? 'bg-sky-600 text-white font-bold shadow-sm' : 'bg-slate-100 text-slate-700 hover:bg-slate-200 font-semibold']" class="px-3.5 py-1.5 rounded-xl text-xs transition whitespace-nowrap">
+              ☕ Cafe View Biển
             </button>
-            <button @click="filterRecType = 'activity'" :class="[filterRecType === 'activity' ? 'bg-sky-500 text-white font-bold' : 'bg-slate-100 text-slate-700 hover:bg-slate-200']" class="px-3.5 py-1.5 rounded-xl text-xs sm:text-sm transition whitespace-nowrap">
+            <button @click="filterRecType = 'activity'" :class="[filterRecType === 'activity' ? 'bg-sky-600 text-white font-bold shadow-sm' : 'bg-slate-100 text-slate-700 hover:bg-slate-200 font-semibold']" class="px-3.5 py-1.5 rounded-xl text-xs transition whitespace-nowrap">
               🚙 Xe Jeep & Đồi Cát
             </button>
           </div>
-
-          <span class="text-xs text-slate-500 font-medium">
-            Bấm "Thêm vào lịch trình" để gắn trực tiếp vào ngày đi!
+          <span class="text-[11px] text-slate-500 font-medium hidden md:inline">
+            Chạm "+ Thêm vào lịch trình" để đưa vào ngày đi
           </span>
         </div>
 
-        <!-- Recommendations Grid -->
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          <div 
-            v-for="rec in filteredRecommendations" 
-            :key="rec.id" 
-            class="bg-white rounded-2xl overflow-hidden border border-slate-200/80 shadow-sm card-hover flex flex-col justify-between">
-            
+        <!-- Recommendations Cards Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5">
+          <div
+            v-for="rec in filteredRecommendations"
+            :key="rec.id"
+            class="bg-white rounded-2xl overflow-hidden border border-slate-200/90 shadow-sm card-hover flex flex-col justify-between">
+
             <div>
-              <!-- Image Banner with Badge -->
-              <div class="relative h-48 w-full overflow-hidden bg-slate-100">
-                <img :src="rec.image" :alt="rec.name" class="w-full h-full object-cover transition duration-300 hover:scale-105">
-                <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-black/20"></div>
-                
-                <span class="absolute top-3 left-3 px-2.5 py-1 rounded-lg text-xs font-bold bg-white/90 backdrop-blur-md text-slate-900 shadow">
+              <!-- Image Header with Offline Gradient Fallback -->
+              <div class="relative h-44 w-full overflow-hidden bg-gradient-to-br from-sky-800 via-teal-700 to-amber-600">
+                <img :src="rec.image" :alt="rec.name" loading="lazy" onerror="this.style.display='none'" class="w-full h-full object-cover transition duration-300 hover:scale-105">
+                <div class="absolute inset-0 bg-gradient-to-t from-black/65 via-black/15 to-transparent"></div>
+
+                <span class="absolute top-3 left-3 px-2.5 py-1 rounded-xl text-[11px] font-bold bg-white/95 text-slate-900 shadow">
                   {{ rec.tag }}
                 </span>
 
-                <span v-if="rec.price" class="absolute bottom-3 right-3 px-2.5 py-1 rounded-lg text-xs font-bold bg-slate-900/80 text-amber-300 backdrop-blur-md">
+                <span v-if="rec.price" class="absolute bottom-3 right-3 px-2.5 py-1 rounded-xl text-xs font-extrabold bg-slate-900/85 text-amber-300 backdrop-blur-md">
                   {{ rec.price }}
                 </span>
               </div>
 
-              <!-- Body Info -->
-              <div class="p-4 sm:p-5 space-y-3">
+              <!-- Content -->
+              <div class="p-4 space-y-2.5">
                 <div>
-                  <h4 class="text-lg font-bold text-slate-900 leading-snug">
+                  <h4 class="text-base sm:text-lg font-extrabold text-slate-900 leading-snug">
                     {{ rec.name }}
                   </h4>
                   <div class="text-xs text-slate-500 flex items-center gap-1.5 mt-1">
                     <i class="fa-regular fa-clock text-sky-500"></i>
-                    <span>Thời điểm đẹp nhất: <strong>{{ rec.bestTime }}</strong></span>
+                    <span>Giờ lý tưởng: <strong class="text-slate-700">{{ rec.bestTime }}</strong></span>
                   </div>
                 </div>
 
@@ -520,19 +606,23 @@
                   {{ rec.highlight }}
                 </p>
 
-                <!-- Tip -->
                 <div v-if="rec.tips" class="text-xs text-amber-900 bg-amber-50 p-2.5 rounded-xl border border-amber-200/60 flex items-start gap-1.5">
-                  <i class="fa-solid fa-wand-magic-sparkles text-amber-600 mt-0.5"></i>
+                  <i class="fa-solid fa-wand-magic-sparkles text-amber-600 mt-0.5 flex-shrink-0"></i>
                   <span>{{ rec.tips }}</span>
                 </div>
               </div>
             </div>
 
-            <!-- Footer Action: Add to Itinerary -->
-            <div class="p-4 pt-0">
-              <button 
-                @click="promptAddRecToItinerary(rec)" 
-                class="w-full py-2.5 px-4 bg-sky-50 hover:bg-sky-500 text-sky-700 hover:text-white rounded-xl text-xs font-bold transition flex items-center justify-center gap-2 border border-sky-200 hover:border-transparent active:scale-98">
+            <!-- Card Footer Actions -->
+            <div class="p-4 pt-0 flex items-center gap-2">
+              <a :href="'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(rec.name + ' Mũi Né Phan Thiết')" target="_blank"
+                class="px-3 py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold transition flex items-center justify-center gap-1.5" title="Xem trên Google Maps">
+                <i class="fa-solid fa-location-dot text-rose-500"></i>
+                <span>Bản đồ</span>
+              </a>
+              <button
+                @click="promptAddRecToItinerary(rec)"
+                class="flex-1 py-2.5 px-3 bg-sky-50 hover:bg-sky-600 text-sky-700 hover:text-white rounded-xl text-xs font-bold transition flex items-center justify-center gap-1.5 border border-sky-200 hover:border-transparent active:scale-95">
                 <i class="fa-solid fa-plus"></i>
                 <span>Thêm Vào Lịch Trình</span>
               </button>
@@ -540,114 +630,178 @@
 
           </div>
         </div>
-
       </section>
 
       <!-- ========================================== -->
       <!-- TAB 3: QUẢN LÝ CHI PHÍ & CHIA TIỀN (BUDGET) -->
       <!-- ========================================== -->
-      <section v-if="activeTab === 'budget'" class="space-y-6">
-        
-        <!-- Budget Metric Cards -->
-        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
-          <div class="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-sm">
-            <span class="text-xs font-semibold text-slate-500 uppercase tracking-wider block">Tổng chi phí chuyến đi</span>
-            <span class="text-2xl sm:text-3xl font-black text-slate-900 mt-1 block">{{ formatCurrency(totalExpenseActual) }}</span>
-            <span class="text-xs text-slate-400 mt-1 block">{{ tripData.expenses.length }} khoản chi đã ghi nhận</span>
-          </div>
+      <section v-if="activeTab === 'budget'" class="space-y-4 sm:space-y-6">
 
-          <div class="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-sm">
-            <span class="text-xs font-semibold text-slate-500 uppercase tracking-wider block">Bình quân mỗi thành viên</span>
-            <span class="text-2xl sm:text-3xl font-black text-sky-600 mt-1 block">{{ formatCurrency(billSplitResults.perPerson) }}</span>
-            <span class="text-xs text-slate-400 mt-1 block">Chia đều cho {{ tripData.tripInfo.travelers.length }} người</span>
-          </div>
-
-          <div class="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-sm flex flex-col justify-between">
+        <!-- 3 Balanced KPI Cards -->
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3.5 sm:gap-4">
+          <div class="bg-white p-4 sm:p-5 rounded-2xl border border-slate-200/90 shadow-sm flex items-center justify-between">
             <div>
-              <span class="text-xs font-semibold text-slate-500 uppercase tracking-wider block">Ghi chép chi tiêu</span>
-              <p class="text-xs text-slate-400 mt-1">Cập nhật hóa đơn để tự động tính nợ</p>
+              <span class="text-[11px] font-bold text-slate-400 uppercase tracking-wider block">Tổng Chi Thực Tế</span>
+              <span class="text-2xl sm:text-3xl font-black text-slate-900 mt-1 block">{{ formatCurrency(totalExpenseActual) }}</span>
+              <span class="text-xs text-slate-500 mt-1 block">{{ tripData.expenses.length }} khoản chi đã lưu</span>
             </div>
-            <div class="mt-3 flex items-center justify-between pt-2 border-t border-slate-100">
-              <span class="text-xs font-semibold text-slate-600">Chia đều nhóm 8 người</span>
-              <button @click="openAddExpenseModal()" class="px-4 py-2 bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 text-white font-bold text-xs rounded-xl shadow-md shadow-orange-500/20 transition active:scale-95 flex items-center gap-1.5">
-                <i class="fa-solid fa-plus"></i>
-                <span>Thêm Khoản Chi</span>
+            <div class="w-11 h-11 rounded-2xl bg-emerald-50 text-emerald-600 flex items-center justify-center text-lg border border-emerald-100">
+              <i class="fa-solid fa-sack-dollar"></i>
+            </div>
+          </div>
+
+          <div class="bg-white p-4 sm:p-5 rounded-2xl border border-slate-200/90 shadow-sm flex items-center justify-between">
+            <div>
+              <span class="text-[11px] font-bold text-slate-400 uppercase tracking-wider block">Bình Quân Mỗi Người</span>
+              <span class="text-2xl sm:text-3xl font-black text-sky-600 mt-1 block">{{ formatCurrency(billSplitResults.perPerson) }}</span>
+              <span class="text-xs text-slate-500 mt-1 block">Chia đều {{ tripData.tripInfo.travelers.length }} thành viên</span>
+            </div>
+            <div class="w-11 h-11 rounded-2xl bg-sky-50 text-sky-600 flex items-center justify-center text-lg border border-sky-100">
+              <i class="fa-solid fa-users"></i>
+            </div>
+          </div>
+
+          <div class="bg-white p-4 sm:p-5 rounded-2xl border border-slate-200/90 shadow-sm flex flex-col justify-between">
+            <div class="flex items-center justify-between">
+              <span class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Ghi Chép Nhanh</span>
+              <span class="text-[11px] font-bold text-orange-600 bg-orange-50 px-2 py-0.5 rounded-full">Split Bill tự động</span>
+            </div>
+            <p class="text-xs text-slate-500 my-1.5">Nhập số tiền kiểu 500k, 1.2tr hoặc 500000 đều được</p>
+            <button @click="openAddExpenseModal()" class="w-full py-2.5 px-4 bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 text-white font-bold text-xs rounded-xl shadow-md shadow-orange-500/20 transition active:scale-95 flex items-center justify-center gap-1.5">
+              <i class="fa-solid fa-plus"></i>
+              <span>Thêm Khoản Chi Mới</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- SMART BILL SPLIT SETTLEMENTS -->
+        <div class="bg-white rounded-2xl p-4 sm:p-6 border border-slate-200/90 shadow-sm space-y-4">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 border-b border-slate-100 pb-3.5">
+            <div>
+              <h3 class="text-base sm:text-lg font-extrabold text-slate-900 flex items-center gap-2">
+                <i class="fa-solid fa-hand-holding-dollar text-emerald-500"></i>
+                <span>Bảng Cân Bằng Công Nợ (Smart Settlement)</span>
+              </h3>
+              <p class="text-xs text-slate-500 mt-0.5">Tối ưu số lượt chuyển khoản ít nhất để tất cả thành viên đều bằng nhau</p>
+            </div>
+            <button @click="copySettlementText" class="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-bold bg-emerald-50 hover:bg-emerald-100 text-emerald-700 border border-emerald-200 transition self-start sm:self-auto active:scale-95">
+              <i class="fa-regular fa-copy"></i>
+              <span>Copy bảng chia tiền gửi Zalo</span>
+            </button>
+          </div>
+
+          <!-- Transfer instructions -->
+          <div v-if="billSplitResults.settlements.length > 0" class="grid grid-cols-1 md:grid-cols-2 gap-2.5">
+            <div
+              v-for="(s, sIdx) in billSplitResults.settlements"
+              :key="sIdx"
+              class="p-3.5 rounded-2xl bg-slate-50/90 border border-slate-200/80 flex items-center justify-between gap-2">
+
+              <div class="flex items-center gap-2.5 min-w-0">
+                <div class="w-8 h-8 rounded-xl bg-rose-100 text-rose-700 flex items-center justify-center font-extrabold text-xs flex-shrink-0">
+                  {{ s.from.substring(0, 1) }}
+                </div>
+                <div class="text-xs sm:text-sm truncate">
+                  <strong class="text-slate-900">{{ s.from }}</strong>
+                  <i class="fa-solid fa-arrow-right text-slate-400 mx-1.5 text-[11px]"></i>
+                  <strong class="text-sky-700">{{ s.to }}</strong>
+                </div>
+              </div>
+
+              <div class="px-3 py-1 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-700 font-black text-xs sm:text-sm flex-shrink-0">
+                {{ formatCurrency(s.amount) }}
+              </div>
+            </div>
+          </div>
+          <div v-else class="text-center py-5 text-slate-400 text-xs font-medium">
+            Hiện tại các thành viên đang cân bằng chi phí, chưa có khoản nợ nào!
+          </div>
+
+          <!-- Per-person balance grid (Click to filter expenses by payer) -->
+          <div class="pt-3 border-t border-slate-100">
+            <div class="flex items-center justify-between mb-2.5">
+              <h4 class="text-xs font-bold uppercase tracking-wider text-slate-400">
+                Chi tiết từng thành viên (Chạm vào tên để lọc khoản chi):
+              </h4>
+              <button v-if="expensePayerFilter !== 'all'" @click="expensePayerFilter = 'all'" class="text-xs font-bold text-sky-600 hover:underline">
+                Bỏ lọc ({{ expensePayerFilter }})
+              </button>
+            </div>
+            <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
+              <button
+                v-for="b in billSplitResults.balances"
+                :key="b.name"
+                @click="expensePayerFilter = (expensePayerFilter === b.name ? 'all' : b.name)"
+                :class="[expensePayerFilter === b.name ? 'ring-2 ring-sky-500 bg-sky-50/60 border-sky-300' : 'bg-slate-50/80 hover:bg-slate-100/80 border-slate-200/70']"
+                class="p-3 rounded-xl border text-left transition">
+                <div class="flex items-center justify-between">
+                  <span class="font-extrabold text-slate-900 text-xs sm:text-sm">{{ b.name }}</span>
+                  <span class="w-2 h-2 rounded-full" :class="[b.balance >= 0 ? 'bg-emerald-500' : 'bg-rose-400']"></span>
+                </div>
+                <div class="text-[11px] text-slate-500 mt-1">Đã chi: <strong class="text-slate-700">{{ formatCurrency(b.paid) }}</strong></div>
+                <div :class="[b.balance >= 0 ? 'text-emerald-600' : 'text-rose-600']" class="text-[11px] font-extrabold mt-0.5">
+                  {{ b.balance >= 0 ? '+ Nhận: ' + formatCurrency(b.balance) : '- Bù: ' + formatCurrency(-b.balance) }}
+                </div>
               </button>
             </div>
           </div>
         </div>
 
-        <!-- SMART BILL SPLIT SETTLEMENTS (Ai chuyển cho ai bao nhiêu) -->
-        <div class="bg-white rounded-2xl p-5 sm:p-6 border border-slate-200/80 shadow-sm space-y-4">
-          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-100 pb-3">
+        <!-- EXPENSE LIST (Mobile Cards + Desktop Table) -->
+        <div class="bg-white rounded-2xl border border-slate-200/90 shadow-sm overflow-hidden">
+          <div class="p-4 sm:p-5 border-b border-slate-100 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
             <div>
-              <h3 class="text-base sm:text-lg font-bold text-slate-900 flex items-center gap-2">
-                <i class="fa-solid fa-hand-holding-dollar text-emerald-500"></i>
-                Bảng Thanh Toán & Chia Tiền Nhóm (Smart Settlement)
+              <h3 class="text-base font-extrabold text-slate-900">
+                Danh Sách Khoản Chi ({{ filteredExpenses.length }})
               </h3>
-              <p class="text-xs text-slate-500">Thuật toán tự động tối ưu số lượt chuyển khoản cho nhóm bạn</p>
+              <p class="text-xs text-slate-500">Bấm vào nút sửa hoặc xóa ở từng khoản để cập nhật ngay</p>
             </div>
-            <span class="px-2.5 py-1 rounded-full text-xs font-bold bg-emerald-50 text-emerald-700 border border-emerald-200">
-              Công bằng & Minh bạch
-            </span>
-          </div>
 
-          <!-- Settlements Result Box -->
-          <div v-if="billSplitResults.settlements.length > 0" class="space-y-2.5">
-            <div 
-              v-for="(s, sIdx) in billSplitResults.settlements" 
-              :key="sIdx" 
-              class="p-3.5 rounded-xl bg-slate-50 border border-slate-200 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
-              
-              <div class="flex items-center gap-3">
-                <div class="w-8 h-8 rounded-full bg-rose-100 text-rose-700 flex items-center justify-center font-bold text-xs">
-                  {{ s.from.substring(0, 1) }}
-                </div>
-                <div class="text-xs sm:text-sm">
-                  <strong class="text-slate-900">{{ s.from }}</strong>
-                  <span class="text-slate-500 mx-2">chuyển khoản cho</span>
-                  <strong class="text-slate-900">{{ s.to }}</strong>
-                </div>
+            <!-- Expense Search & Add -->
+            <div class="flex items-center gap-2">
+              <div class="relative flex-1 sm:w-52">
+                <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
+                <input v-model="expenseSearch" type="text" placeholder="Tìm khoản chi..." class="w-full pl-8 pr-3 py-1.5 rounded-xl bg-slate-100 border border-slate-200 text-xs focus:bg-white focus:outline-none focus:ring-2 focus:ring-sky-500">
               </div>
-
-              <div class="flex items-center gap-2 self-end sm:self-auto">
-                <span class="text-base font-extrabold text-emerald-600">
-                  {{ formatCurrency(s.amount) }}
-                </span>
-                <span class="text-xs text-slate-400">chẵn</span>
-              </div>
+              <button @click="openAddExpenseModal()" class="px-3.5 py-2 rounded-xl bg-orange-500 hover:bg-orange-600 text-white text-xs font-bold transition flex items-center gap-1.5 flex-shrink-0 active:scale-95">
+                <i class="fa-solid fa-plus"></i>
+                <span>Thêm</span>
+              </button>
             </div>
           </div>
-          <div v-else class="text-center py-6 text-slate-400 text-xs">
-            Hiện tại các thành viên đang cân bằng chi phí, chưa có khoản nợ nào!
-          </div>
 
-          <!-- Detailed balances of each person -->
-          <div class="mt-4 pt-4 border-t border-slate-100">
-            <h4 class="text-xs font-bold uppercase tracking-wider text-slate-500 mb-3">Tổng tiền mỗi thành viên đã chi trả:</h4>
-            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3">
-              <div v-for="b in billSplitResults.balances" :key="b.name" class="p-3 rounded-xl bg-slate-50 border border-slate-100 text-xs">
-                <div class="font-bold text-slate-800">{{ b.name }}</div>
-                <div class="text-slate-500 mt-1">Đã chi: <strong>{{ formatCurrency(b.paid) }}</strong></div>
-                <div :class="[b.balance >= 0 ? 'text-emerald-600 font-bold' : 'text-rose-600 font-bold']" class="mt-0.5">
-                  {{ b.balance >= 0 ? 'Nhận lại: ' + formatCurrency(b.balance) : 'Cần trả thêm: ' + formatCurrency(-b.balance) }}
+          <!-- Mobile Card List (Visible on small screens) -->
+          <div class="divide-y divide-slate-100 sm:hidden">
+            <div v-for="exp in filteredExpenses" :key="exp.id" class="p-3.5 flex items-start justify-between gap-2.5">
+              <div class="space-y-1 min-w-0 flex-1">
+                <div class="flex items-center gap-1.5 flex-wrap">
+                  <span :class="getCategoryBadge(exp.category).bg" class="px-2 py-0.5 rounded-full text-[10px] font-bold border">
+                    {{ getCategoryBadge(exp.category).label }}
+                  </span>
+                  <span class="text-xs font-bold text-sky-700 bg-sky-50 px-2 py-0.5 rounded-lg border border-sky-100">
+                    <i class="fa-solid fa-user text-[9px] mr-0.5"></i>{{ exp.payer }} trả
+                  </span>
+                </div>
+                <div class="font-extrabold text-slate-900 text-sm leading-snug">{{ exp.title }}</div>
+                <div v-if="exp.note" class="text-xs text-slate-500">{{ exp.note }}</div>
+              </div>
+
+              <div class="text-right flex flex-col items-end gap-1.5 flex-shrink-0">
+                <span class="font-black text-slate-900 text-sm">{{ formatCurrency(exp.amount) }}</span>
+                <div class="flex items-center gap-1">
+                  <button @click="editExpense(exp)" class="w-7 h-7 rounded-lg bg-slate-100 text-slate-600 hover:text-sky-600 flex items-center justify-center text-xs">
+                    <i class="fa-solid fa-pen"></i>
+                  </button>
+                  <button @click="deleteExpense(exp.id)" class="w-7 h-7 rounded-lg bg-slate-100 text-slate-600 hover:text-rose-600 flex items-center justify-center text-xs">
+                    <i class="fa-solid fa-trash-can"></i>
+                  </button>
                 </div>
               </div>
             </div>
           </div>
 
-        </div>
-
-        <!-- Expense Table List -->
-        <div class="bg-white rounded-2xl border border-slate-200/80 shadow-sm overflow-hidden">
-          <div class="p-4 sm:p-5 border-b border-slate-100 flex items-center justify-between">
-            <h3 class="text-base font-bold text-slate-900">Chi Tiết Từng Khoản Chi</h3>
-            <button @click="openAddExpenseModal()" class="text-xs font-semibold text-sky-600 hover:text-sky-700">
-              + Thêm khoản chi mới
-            </button>
-          </div>
-
-          <div class="overflow-x-auto">
+          <!-- Desktop Table (Hidden on mobile) -->
+          <div class="hidden sm:block overflow-x-auto">
             <table class="w-full text-left text-xs sm:text-sm">
               <thead class="bg-slate-50 text-slate-500 text-[11px] uppercase tracking-wider border-b border-slate-100 font-bold">
                 <tr>
@@ -655,27 +809,28 @@
                   <th class="py-3 px-4">Danh Mục</th>
                   <th class="py-3 px-4">Người Trả</th>
                   <th class="py-3 px-4 text-right">Số Tiền</th>
-                  <th class="py-3 px-4 text-center">Thao tác</th>
+                  <th class="py-3 px-4 text-center">Thao Tác</th>
                 </tr>
               </thead>
               <tbody class="divide-y divide-slate-100 font-medium">
-                <tr v-for="exp in tripData.expenses" :key="exp.id" class="hover:bg-slate-50/80 transition">
-                  <td class="py-3 px-4">
+                <tr v-for="exp in filteredExpenses" :key="exp.id" class="hover:bg-slate-50/80 transition">
+                  <td class="py-3.5 px-4">
                     <div class="font-bold text-slate-900">{{ exp.title }}</div>
                     <div v-if="exp.note" class="text-xs text-slate-400 font-normal">{{ exp.note }}</div>
                   </td>
-                  <td class="py-3 px-4">
-                    <span :class="getCategoryBadge(exp.category).bg" class="px-2 py-0.5 rounded-full text-[10px] font-bold border">
-                      {{ getCategoryBadge(exp.category).label }}
+                  <td class="py-3.5 px-4">
+                    <span :class="getCategoryBadge(exp.category).bg" class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[11px] font-bold border">
+                      <i :class="getCategoryBadge(exp.category).icon" class="text-[10px]"></i>
+                      <span>{{ getCategoryBadge(exp.category).label }}</span>
                     </span>
                   </td>
-                  <td class="py-3 px-4 text-slate-700 font-semibold">
-                    {{ exp.payer }}
+                  <td class="py-3.5 px-4">
+                    <span class="font-bold text-slate-800 bg-slate-100 px-2.5 py-1 rounded-lg text-xs">{{ exp.payer }}</span>
                   </td>
-                  <td class="py-3 px-4 text-right font-extrabold text-slate-900">
+                  <td class="py-3.5 px-4 text-right font-black text-slate-900">
                     {{ formatCurrency(exp.amount) }}
                   </td>
-                  <td class="py-3 px-4 text-center">
+                  <td class="py-3.5 px-4 text-center">
                     <div class="flex items-center justify-center gap-1.5">
                       <button @click="editExpense(exp)" class="text-slate-400 hover:text-sky-600 transition p-1.5 hover:bg-slate-100 rounded-lg" title="Sửa khoản chi">
                         <i class="fa-solid fa-pen-to-square"></i>
@@ -696,17 +851,17 @@
       <!-- ========================================== -->
       <!-- TAB 4: HÀNH LÝ & CHUẨN BỊ (PACKING)         -->
       <!-- ========================================== -->
-      <section v-if="activeTab === 'packing'" class="space-y-6">
-        
-        <!-- Packing progress banner -->
-        <div class="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+      <section v-if="activeTab === 'packing'" class="space-y-4 sm:space-y-5">
+
+        <!-- Packing Progress Card -->
+        <div class="bg-white p-4 sm:p-5 rounded-2xl border border-slate-200/90 shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div>
-            <h3 class="text-base sm:text-lg font-bold text-slate-900 flex items-center gap-2">
-              <i class="fa-solid fa-clipboard-check text-sky-500"></i>
-              Tiến Độ Chuẩn Bị Hành Lý ({{ packingProgress }}%)
+            <h3 class="text-base sm:text-lg font-extrabold text-slate-900 flex items-center gap-2">
+              <i class="fa-solid fa-suitcase-rolling text-sky-500"></i>
+              <span>Tiến Độ Chuẩn Bị Hành Lý ({{ packingProgress }}%)</span>
             </h3>
-            <p class="text-xs text-slate-500 mt-1">
-              Đánh dấu các món đã bỏ vào vali trước giờ ra sân bay
+            <p class="text-xs text-slate-500 mt-0.5">
+              Chạm vào từng món đồ để đánh dấu đã xếp vào vali trước giờ ra sân bay
             </p>
           </div>
 
@@ -717,16 +872,16 @@
           </div>
         </div>
 
-        <!-- Add new item quick bar -->
-        <div class="bg-white p-3 sm:p-4 rounded-2xl border border-slate-200 shadow-sm flex flex-col sm:flex-row gap-2">
-          <input 
-            v-model="newPackingItem.item" 
+        <!-- Quick Add Packing Item -->
+        <div class="bg-white p-3.5 sm:p-4 rounded-2xl border border-slate-200/90 shadow-sm flex flex-col sm:flex-row gap-2">
+          <input
+            v-model="newPackingItem.item"
             @keyup.enter="addPackingItem"
-            type="text" 
-            placeholder="Nhập món đồ cần mang (vd: Thuốc nhỏ mắt, kem dưỡng da...)" 
+            type="text"
+            placeholder="Thêm đồ cần mang (vd: Kính mát, kem chống nắng, sạc dự phòng...)"
             class="flex-1 text-xs sm:text-sm px-3.5 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-sky-500">
-          
-          <select v-model="newPackingItem.category" class="text-xs sm:text-sm px-3 py-2.5 rounded-xl border border-slate-200 bg-white focus:outline-none focus:ring-2 focus:ring-sky-500">
+
+          <select v-model="newPackingItem.category" class="text-xs sm:text-sm px-3 py-2.5 rounded-xl border border-slate-200 bg-white font-medium focus:outline-none focus:ring-2 focus:ring-sky-500">
             <option value="Sinh Nhật Bún 🎂">Sinh Nhật Bún 🎂</option>
             <option value="Giấy tờ & Vé máy bay">Giấy tờ & Vé máy bay</option>
             <option value="Trang phục sống ảo">Trang phục sống ảo</option>
@@ -735,51 +890,48 @@
             <option value="Y tế & Sức khỏe">Y tế & Sức khỏe</option>
           </select>
 
-          <button @click="addPackingItem" class="px-4 py-2.5 bg-sky-500 hover:bg-sky-600 text-white rounded-xl text-xs sm:text-sm font-semibold transition active:scale-95 whitespace-nowrap">
+          <button @click="addPackingItem" class="px-4 py-2.5 bg-sky-600 hover:bg-sky-700 text-white rounded-xl text-xs sm:text-sm font-bold transition active:scale-95 whitespace-nowrap">
             + Thêm Vào Vali
           </button>
         </div>
 
-        <!-- Categorized Checklist Cards -->
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div 
-            v-for="(items, categoryName) in packingCategories" 
-            :key="categoryName" 
-            class="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-sm space-y-3">
-            
+        <!-- Categorized Checklists -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-5">
+          <div
+            v-for="(items, categoryName) in packingCategories"
+            :key="categoryName"
+            class="bg-white p-4 sm:p-5 rounded-2xl border border-slate-200/90 shadow-sm space-y-3">
+
             <div class="flex items-center justify-between border-b border-slate-100 pb-2.5">
-              <h4 class="text-sm font-bold text-slate-900 flex items-center gap-2">
-                <span v-if="categoryName.includes('Sinh Nhật')" class="text-base">🎂</span>
-                <span v-else-if="categoryName.includes('Giấy tờ')" class="text-base">📄</span>
-                <span v-else-if="categoryName.includes('Trang phục')" class="text-base">👗</span>
-                <span v-else-if="categoryName.includes('Chống nắng')" class="text-base">🧴</span>
-                <span v-else-if="categoryName.includes('Công nghệ')" class="text-base">📱</span>
-                <span v-else class="text-base">💊</span>
-                {{ categoryName }}
+              <h4 class="text-sm font-extrabold text-slate-900 flex items-center gap-2">
+                <span v-if="categoryName.includes('Sinh Nhật')">🎂</span>
+                <span v-else-if="categoryName.includes('Giấy tờ')">📄</span>
+                <span v-else-if="categoryName.includes('Trang phục')">👗</span>
+                <span v-else-if="categoryName.includes('Chống nắng')">🧴</span>
+                <span v-else-if="categoryName.includes('Công nghệ')">📱</span>
+                <span v-else>💊</span>
+                <span>{{ categoryName }}</span>
               </h4>
-              <span class="text-xs text-slate-400 font-semibold">
+              <span class="text-xs px-2 py-0.5 rounded-full bg-slate-100 text-slate-600 font-bold">
                 {{ items.filter(i => i.checked).length }}/{{ items.length }}
               </span>
             </div>
 
-            <!-- Item List -->
-            <div class="space-y-2">
-              <div 
-                v-for="item in items" 
-                :key="item.id" 
-                class="flex items-center justify-between p-2 rounded-xl hover:bg-slate-50 transition group">
-                
-                <label class="flex items-center gap-2.5 cursor-pointer flex-1">
-                  <input 
-                    type="checkbox" 
-                    v-model="item.checked" 
-                    class="w-4 h-4 rounded text-sky-600 focus:ring-sky-500 border-slate-300">
-                  <span :class="{'line-through text-slate-400': item.checked}" class="text-xs sm:text-sm text-slate-700 font-medium">
+            <div class="space-y-1.5">
+              <div
+                v-for="item in items"
+                :key="item.id"
+                class="flex items-center justify-between p-2 rounded-xl hover:bg-slate-50 transition">
+                <label class="flex items-center gap-2.5 cursor-pointer flex-1 min-w-0">
+                  <input
+                    type="checkbox"
+                    v-model="item.checked"
+                    class="w-4 h-4 rounded text-sky-600 focus:ring-sky-500 border-slate-300 flex-shrink-0">
+                  <span :class="{'line-through text-slate-400': item.checked}" class="text-xs sm:text-sm text-slate-700 font-medium truncate">
                     {{ item.item }}
                   </span>
                 </label>
-
-                <button @click="removePackingItem(item.id)" class="opacity-0 group-hover:opacity-100 text-slate-300 hover:text-rose-500 p-1 text-xs transition">
+                <button @click="removePackingItem(item.id)" class="text-slate-300 hover:text-rose-500 p-1 text-xs transition flex-shrink-0" title="Xóa món đồ">
                   <i class="fa-solid fa-xmark"></i>
                 </button>
               </div>
@@ -787,67 +939,114 @@
 
           </div>
         </div>
-
       </section>
 
       <!-- ========================================== -->
       <!-- TAB 5: BÍ KÍP BỎ TÚI (TIPS)                 -->
       <!-- ========================================== -->
-      <section v-if="activeTab === 'tips'" class="space-y-6">
-        
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div 
-            v-for="(tip, tIdx) in tripData.travelTips" 
-            :key="tIdx" 
-            class="bg-white p-5 sm:p-6 rounded-2xl border border-slate-200/80 shadow-sm space-y-3">
-            
+      <section v-if="activeTab === 'tips'" class="space-y-4 sm:space-y-5">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-5">
+          <div
+            v-for="(tip, tIdx) in tripData.travelTips"
+            :key="tIdx"
+            class="bg-white p-4 sm:p-5 rounded-2xl border border-slate-200/90 shadow-sm space-y-2.5">
             <div class="flex items-center gap-3">
-              <div class="w-10 h-10 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center font-bold text-lg border border-amber-200">
-                <i class="fa-solid fa-compass"></i>
+              <div class="w-9 h-9 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center font-bold text-base border border-amber-200 flex-shrink-0">
+                <i class="fa-solid fa-lightbulb"></i>
               </div>
-              <h4 class="text-base font-bold text-slate-900">{{ tip.title }}</h4>
+              <h4 class="text-sm sm:text-base font-extrabold text-slate-900">{{ tip.title }}</h4>
             </div>
-
-            <p class="text-xs sm:text-sm text-slate-600 leading-relaxed bg-slate-50 p-4 rounded-xl border border-slate-100">
+            <p class="text-xs sm:text-sm text-slate-600 leading-relaxed bg-slate-50 p-3.5 rounded-xl border border-slate-100">
               {{ tip.content }}
             </p>
           </div>
         </div>
 
-        <!-- Google Sheet Embed / Info Callout -->
-        <div class="bg-gradient-to-r from-emerald-500 to-teal-600 text-white p-6 rounded-2xl shadow-md flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <!-- Google Sheet Sync Callout -->
+        <div class="bg-gradient-to-r from-emerald-600 to-teal-600 text-white p-5 rounded-2xl shadow-md flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div class="space-y-1">
-            <h4 class="text-lg font-bold flex items-center gap-2">
-              <i class="fa-solid fa-file-excel"></i> Đồng bộ chuẩn từ Google Sheets
+            <h4 class="text-base sm:text-lg font-extrabold flex items-center gap-2">
+              <i class="fa-solid fa-table"></i>
+              <span>Liên kết trực tiếp với Google Sheet của đoàn</span>
             </h4>
             <p class="text-emerald-100 text-xs sm:text-sm">
-              Mọi khung giờ, quán ăn (Một Nắng, Muối Ớt Xanh, Tiệm cơm dưới tán dừa...) đều khớp 100% với bảng kế hoạch của bạn.
+              Khi chỉnh sửa trực tiếp trên web, lịch trình của bạn sẽ được bảo vệ. Bấm "Đồng bộ Sheet" bất cứ lúc nào để kéo bản mới nhất từ Google Sheet về.
             </p>
           </div>
-
           <a :href="tripData.tripInfo.sheetUrl" target="_blank" class="px-4 py-2.5 bg-white text-emerald-800 hover:bg-emerald-50 font-bold text-xs rounded-xl shadow transition self-start sm:self-auto whitespace-nowrap">
-            Mở Bảng Google Sheet ↗
+            Mở Google Sheet Gốc ↗
           </a>
         </div>
-
       </section>
 
     </main>
 
-    <!-- FOOTER -->
-    <footer class="bg-white border-t border-slate-200 py-6 text-center text-xs text-slate-500 mt-auto no-print">
-      <div class="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-3">
-        <p>
-          🏖️ Kế hoạch du lịch Sài Gòn - Phan Thiết - Mũi Né (27/11 - 30/11/2026) • Mừng sinh nhật Bún
-        </p>
+    <!-- ========================================== -->
+    <!-- MOBILE FLOATING ACTION BUTTON (FAB)        -->
+    <!-- ========================================== -->
+    <div class="fixed right-4 bottom-20 z-30 sm:hidden no-print">
+      <button v-if="activeTab === 'itinerary'" @click="openAddActivityModal()"
+        class="flex items-center gap-1.5 px-4 py-3 rounded-full bg-gradient-to-r from-orange-500 to-amber-500 text-white font-extrabold text-xs shadow-xl shadow-orange-500/30 active:scale-95">
+        <i class="fa-solid fa-plus"></i>
+        <span>Hoạt Động</span>
+      </button>
+      <button v-else-if="activeTab === 'budget'" @click="openAddExpenseModal()"
+        class="flex items-center gap-1.5 px-4 py-3 rounded-full bg-gradient-to-r from-orange-500 to-amber-500 text-white font-extrabold text-xs shadow-xl shadow-orange-500/30 active:scale-95">
+        <i class="fa-solid fa-plus"></i>
+        <span>Khoản Chi</span>
+      </button>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- MOBILE BOTTOM NAVIGATION BAR               -->
+    <!-- ========================================== -->
+    <nav class="glass-bottom-nav fixed bottom-0 inset-x-0 z-40 md:hidden no-print">
+      <div class="grid grid-cols-5 h-16 px-1">
+        <button @click="activeTab = 'itinerary'" :class="[activeTab === 'itinerary' ? 'text-sky-600 font-extrabold' : 'text-slate-400 font-semibold']" class="flex flex-col items-center justify-center gap-1 transition">
+          <div :class="[activeTab === 'itinerary' ? 'bg-sky-100 text-sky-600 px-3 py-0.5 rounded-full' : '']">
+            <i class="fa-regular fa-calendar-check text-sm"></i>
+          </div>
+          <span class="text-[10px]">Lịch trình</span>
+        </button>
+
+        <button @click="activeTab = 'explore'" :class="[activeTab === 'explore' ? 'text-sky-600 font-extrabold' : 'text-slate-400 font-semibold']" class="flex flex-col items-center justify-center gap-1 transition">
+          <div :class="[activeTab === 'explore' ? 'bg-sky-100 text-sky-600 px-3 py-0.5 rounded-full' : '']">
+            <i class="fa-solid fa-compass text-sm"></i>
+          </div>
+          <span class="text-[10px]">Khám phá</span>
+        </button>
+
+        <button @click="activeTab = 'budget'" :class="[activeTab === 'budget' ? 'text-sky-600 font-extrabold' : 'text-slate-400 font-semibold']" class="flex flex-col items-center justify-center gap-1 transition">
+          <div :class="[activeTab === 'budget' ? 'bg-sky-100 text-sky-600 px-3 py-0.5 rounded-full' : '']">
+            <i class="fa-solid fa-wallet text-sm"></i>
+          </div>
+          <span class="text-[10px]">Chi phí</span>
+        </button>
+
+        <button @click="activeTab = 'packing'" :class="[activeTab === 'packing' ? 'text-sky-600 font-extrabold' : 'text-slate-400 font-semibold']" class="flex flex-col items-center justify-center gap-1 transition">
+          <div :class="[activeTab === 'packing' ? 'bg-sky-100 text-sky-600 px-3 py-0.5 rounded-full' : '']">
+            <i class="fa-solid fa-suitcase-rolling text-sm"></i>
+          </div>
+          <span class="text-[10px]">Hành lý</span>
+        </button>
+
+        <button @click="activeTab = 'tips'" :class="[activeTab === 'tips' ? 'text-sky-600 font-extrabold' : 'text-slate-400 font-semibold']" class="flex flex-col items-center justify-center gap-1 transition">
+          <div :class="[activeTab === 'tips' ? 'bg-sky-100 text-sky-600 px-3 py-0.5 rounded-full' : '']">
+            <i class="fa-solid fa-lightbulb text-sm"></i>
+          </div>
+          <span class="text-[10px]">Bí kíp</span>
+        </button>
+      </div>
+    </nav>
+
+    <!-- FOOTER (Desktop) -->
+    <footer class="hidden md:block bg-white border-t border-slate-200/80 py-5 text-center text-xs text-slate-500 mt-12 no-print">
+      <div class="max-w-7xl mx-auto px-6 flex items-center justify-between">
+        <p>🏖️ Kế hoạch du lịch Sài Gòn - Phan Thiết - Mũi Né (27/11 - 30/11/2026) • Mừng sinh nhật Bún 🎂</p>
         <div class="flex items-center gap-4">
-          <button @click="resetToDefault" class="text-slate-400 hover:text-slate-700 underline">
-            Khôi phục lịch trình mẫu
-          </button>
+          <button @click="resetToDefault" class="text-slate-400 hover:text-slate-700 underline">Khôi phục lịch trình mẫu</button>
           <span>•</span>
-          <button @click="copyShareText" class="text-sky-600 font-semibold hover:underline">
-            Copy Lịch Trình
-          </button>
+          <button @click="copyShareText" class="text-sky-600 font-bold hover:underline">Copy Lịch Trình Gửi Zalo</button>
         </div>
       </div>
     </footer>
@@ -855,42 +1054,36 @@
     <!-- ========================================== -->
     <!-- MODAL 1: THÊM / SỬA HOẠT ĐỘNG              -->
     <!-- ========================================== -->
-    <div v-if="showActivityModal" class="fixed inset-0 z-50 overflow-y-auto bg-black/60 backdrop-blur-sm flex min-h-full items-center justify-center p-3 sm:p-6 modal-overlay">
-      <div class="relative w-full max-w-lg rounded-2xl bg-white shadow-2xl border border-slate-200 overflow-hidden my-auto max-h-[90vh] flex flex-col animate-in fade-in zoom-in duration-150">
-        
-        <!-- Modal Header -->
+    <div v-if="showActivityModal" class="fixed inset-0 z-50 overflow-y-auto bg-slate-900/60 backdrop-blur-sm flex min-h-full items-end sm:items-center justify-center p-0 sm:p-4 modal-overlay">
+      <div class="relative w-full max-w-lg rounded-t-3xl sm:rounded-2xl bg-white shadow-2xl border border-slate-200 overflow-hidden max-h-[92vh] flex flex-col">
         <div class="p-4 sm:p-5 border-b border-slate-100 flex items-center justify-between flex-shrink-0 bg-white">
-          <h3 class="text-base font-bold text-slate-900 flex items-center gap-2">
+          <h3 class="text-base font-extrabold text-slate-900 flex items-center gap-2">
             <i class="fa-solid fa-calendar-check text-sky-500"></i>
-            {{ editingActivity ? 'Chỉnh Sửa Hoạt Động' : 'Thêm Hoạt Động Mới' }}
+            <span>{{ editingActivity ? 'Chỉnh Sửa Hoạt Động' : 'Thêm Hoạt Động Mới' }}</span>
           </h3>
-          <button @click="showActivityModal = false" class="text-slate-400 hover:text-slate-600 p-1.5 rounded-lg hover:bg-slate-100 transition">
+          <button @click="showActivityModal = false" class="text-slate-400 hover:text-slate-600 w-8 h-8 rounded-xl hover:bg-slate-100 flex items-center justify-center transition">
             <i class="fa-solid fa-xmark text-base"></i>
           </button>
         </div>
 
-        <!-- Modal Body (Scrollable) -->
         <form @submit.prevent="saveActivity" class="p-4 sm:p-5 space-y-3.5 text-xs sm:text-sm overflow-y-auto flex-1">
-          
-          <!-- Select Day -->
           <div>
-            <label class="block font-semibold text-slate-700 mb-1">Ngày áp dụng:</label>
-            <select v-model="activityForm.dayIndex" class="w-full px-3 py-2 rounded-xl border border-slate-200 bg-white focus:outline-none focus:ring-2 focus:ring-sky-500 font-medium">
+            <label class="block font-bold text-slate-700 mb-1">Ngày áp dụng:</label>
+            <select v-model="activityForm.dayIndex" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 bg-white focus:outline-none focus:ring-2 focus:ring-sky-500 font-semibold">
               <option v-for="(day, idx) in tripData.itinerary" :key="day.day" :value="idx">
                 Ngày {{ day.day }} ({{ day.date }})
               </option>
             </select>
           </div>
 
-          <!-- Time & Category -->
           <div class="grid grid-cols-2 gap-3">
             <div>
-              <label class="block font-semibold text-slate-700 mb-1">Thời gian:</label>
-              <input v-model="activityForm.time" type="text" required placeholder="Vd: 08:30" class="w-full px-3 py-2 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-sky-500 font-medium">
+              <label class="block font-bold text-slate-700 mb-1">Khung giờ:</label>
+              <input v-model="activityForm.time" type="text" required placeholder="Vd: 08:30" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-sky-500 font-semibold">
             </div>
             <div>
-              <label class="block font-semibold text-slate-700 mb-1">Danh mục:</label>
-              <select v-model="activityForm.category" class="w-full px-3 py-2 rounded-xl border border-slate-200 bg-white focus:outline-none focus:ring-2 focus:ring-sky-500 font-medium">
+              <label class="block font-bold text-slate-700 mb-1">Danh mục:</label>
+              <select v-model="activityForm.category" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 bg-white focus:outline-none focus:ring-2 focus:ring-sky-500 font-semibold">
                 <option value="sightseeing">Tham quan & Check-in</option>
                 <option value="food">Ăn uống & Hải sản</option>
                 <option value="chill">Cafe sống ảo view biển</option>
@@ -898,188 +1091,175 @@
                 <option value="transport">Di chuyển & Đưa đón</option>
                 <option value="rest">Nghỉ ngơi & Resort</option>
                 <option value="nightlife">Chill đêm & Tiệc tùng</option>
-                <option value="shopping">Mua sắm & Quà đặc sản</option>
+                <option value="shopping">Mua sắm & Quà</option>
               </select>
             </div>
           </div>
 
-          <!-- Title -->
           <div>
-            <label class="block font-semibold text-slate-700 mb-1">Tên hoạt động:</label>
-            <input v-model="activityForm.title" type="text" required placeholder="Vd: Check-in Bãi Đá Ông Địa" class="w-full px-3 py-2 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-sky-500 font-bold text-slate-900">
+            <label class="block font-bold text-slate-700 mb-1">Tên hoạt động:</label>
+            <input v-model="activityForm.title" type="text" required placeholder="Vd: Ăn tối hải sản Một Nắng" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-sky-500 font-bold text-slate-900">
           </div>
 
-          <!-- Location -->
           <div>
-            <label class="block font-semibold text-slate-700 mb-1">Địa điểm / Địa chỉ:</label>
-            <input v-model="activityForm.location" type="text" placeholder="Vd: 122 Nguyễn Đình Chiểu, Hàm Tiến" class="w-full px-3 py-2 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-sky-500">
+            <label class="block font-bold text-slate-700 mb-1">Địa điểm / Địa chỉ:</label>
+            <input v-model="activityForm.location" type="text" placeholder="Vd: 122 Nguyễn Đình Chiểu, Hàm Tiến" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-sky-500">
           </div>
 
-          <!-- Cost -->
           <div>
-            <label class="block font-semibold text-slate-700 mb-1">Chi phí ước tính (VNĐ):</label>
-            <input v-model="activityForm.cost" type="text" placeholder="Vd: 500000 hoặc 500k hoặc 1.2tr" class="w-full px-3 py-2 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-sky-500 font-medium">
+            <label class="block font-bold text-slate-700 mb-1">Chi phí dự kiến (VNĐ - tùy chọn):</label>
+            <input v-model="activityForm.cost" type="text" placeholder="Vd: 500k hoặc 1.2tr" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-sky-500 font-semibold">
           </div>
 
-          <!-- Notes -->
           <div>
-            <label class="block font-semibold text-slate-700 mb-1">Ghi chú chi tiết:</label>
-            <textarea v-model="activityForm.notes" rows="2" placeholder="Ghi chú thêm về món ăn, chuẩn bị..." class="w-full px-3 py-2 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-sky-500 text-xs"></textarea>
+            <label class="block font-bold text-slate-700 mb-1">Ghi chú chi tiết:</label>
+            <textarea v-model="activityForm.notes" rows="2" placeholder="Ghi chú món ăn, người liên hệ..." class="w-full px-3.5 py-2 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-sky-500 text-xs"></textarea>
           </div>
 
-          <!-- Tip -->
           <div>
-            <label class="block font-semibold text-slate-700 mb-1">Mẹo / Tips bỏ túi:</label>
-            <input v-model="activityForm.tip" type="text" placeholder="Vd: Đi trước 17h để ngắm trọn hoàng hôn" class="w-full px-3 py-2 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-sky-500 text-xs">
+            <label class="block font-bold text-slate-700 mb-1">Mẹo / Lưu ý bỏ túi:</label>
+            <input v-model="activityForm.tip" type="text" placeholder="Vd: Đi trước 17h để ngắm hoàng hôn" class="w-full px-3.5 py-2 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-sky-500 text-xs">
           </div>
 
-          <!-- Sticky Modal Footer -->
-          <div class="pt-3 border-t border-slate-100 flex items-center justify-end gap-2 sticky bottom-0 bg-white/95 backdrop-blur-sm -mx-4 px-4 sm:-mx-5 sm:px-5 py-2 mt-4">
-            <button type="button" @click="showActivityModal = false" class="px-4 py-2 rounded-xl border border-slate-200 text-slate-600 hover:bg-slate-100 font-semibold transition">
+          <div class="pt-3 border-t border-slate-100 flex items-center justify-end gap-2 sticky bottom-0 bg-white/95 backdrop-blur-sm -mx-4 px-4 sm:-mx-5 sm:px-5 py-2.5 mt-4">
+            <button type="button" @click="showActivityModal = false" class="px-4 py-2.5 rounded-xl border border-slate-200 text-slate-600 hover:bg-slate-100 font-bold transition">
               Hủy
             </button>
-            <button type="submit" class="px-5 py-2 rounded-xl bg-sky-500 hover:bg-sky-600 text-white font-bold transition shadow-md shadow-sky-500/20 active:scale-95">
+            <button type="submit" class="px-5 py-2.5 rounded-xl bg-sky-600 hover:bg-sky-700 text-white font-bold transition shadow-md shadow-sky-500/20 active:scale-95">
               {{ editingActivity ? 'Cập Nhật Hoạt Động' : 'Lưu Hoạt Động' }}
             </button>
           </div>
-
         </form>
-
       </div>
     </div>
 
     <!-- ========================================== -->
     <!-- MODAL 2: SỬA THÔNG TIN NGÀY (DAY)          -->
     <!-- ========================================== -->
-    <div v-if="showDayModal" class="fixed inset-0 z-50 overflow-y-auto bg-black/60 backdrop-blur-sm flex min-h-full items-center justify-center p-3 sm:p-6 modal-overlay">
-      <div class="relative w-full max-w-md rounded-2xl bg-white shadow-2xl border border-slate-200 overflow-hidden my-auto max-h-[90vh] flex flex-col animate-in fade-in zoom-in duration-150">
-        
+    <div v-if="showDayModal" class="fixed inset-0 z-50 overflow-y-auto bg-slate-900/60 backdrop-blur-sm flex min-h-full items-end sm:items-center justify-center p-0 sm:p-4 modal-overlay">
+      <div class="relative w-full max-w-md rounded-t-3xl sm:rounded-2xl bg-white shadow-2xl border border-slate-200 overflow-hidden max-h-[90vh] flex flex-col">
         <div class="p-4 sm:p-5 border-b border-slate-100 flex items-center justify-between flex-shrink-0 bg-white">
-          <h3 class="text-base font-bold text-slate-900 flex items-center gap-2">
+          <h3 class="text-base font-extrabold text-slate-900 flex items-center gap-2">
             <i class="fa-solid fa-calendar-day text-amber-500"></i>
-            Chỉnh Sửa Ngày {{ dayForm.day }}
+            <span>Chỉnh Sửa Ngày {{ dayForm.day }}</span>
           </h3>
-          <button @click="showDayModal = false" class="text-slate-400 hover:text-slate-600 p-1.5 rounded-lg hover:bg-slate-100 transition">
+          <button @click="showDayModal = false" class="text-slate-400 hover:text-slate-600 w-8 h-8 rounded-xl hover:bg-slate-100 flex items-center justify-center transition">
             <i class="fa-solid fa-xmark text-base"></i>
           </button>
         </div>
 
         <form @submit.prevent="saveDay" class="p-4 sm:p-5 space-y-3.5 text-xs sm:text-sm overflow-y-auto flex-1">
           <div>
-            <label class="block font-semibold text-slate-700 mb-1">Tiêu đề ngày:</label>
-            <input v-model="dayForm.dateTitle" type="text" required placeholder="Vd: Ngày 1: Sài Gòn ➔ Mũi Né" class="w-full px-3 py-2 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-sky-500 font-bold text-slate-900">
+            <label class="block font-bold text-slate-700 mb-1">Tiêu đề ngày:</label>
+            <input v-model="dayForm.dateTitle" type="text" required placeholder="Vd: Ngày 1: Sài Gòn ➔ Mũi Né" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-sky-500 font-bold text-slate-900">
           </div>
 
           <div>
-            <label class="block font-semibold text-slate-700 mb-1">Ngày (dd/mm/yyyy):</label>
-            <input v-model="dayForm.date" type="text" placeholder="27/11/2026" class="w-full px-3 py-2 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-sky-500 font-medium">
+            <label class="block font-bold text-slate-700 mb-1">Ngày (dd/mm/yyyy):</label>
+            <input v-model="dayForm.date" type="text" placeholder="27/11/2026" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-sky-500 font-semibold">
           </div>
 
           <div>
-            <label class="block font-semibold text-slate-700 mb-1">Khách sạn / Resort lưu trú:</label>
-            <input v-model="dayForm.hotel" type="text" placeholder="Vd: Centara Mirage Resort Mũi Né" class="w-full px-3 py-2 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-sky-500">
+            <label class="block font-bold text-slate-700 mb-1">Khách sạn / Resort lưu trú:</label>
+            <input v-model="dayForm.hotel" type="text" placeholder="Vd: Centara Mirage Resort Mũi Né" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-sky-500">
           </div>
 
-          <div class="pt-3 border-t border-slate-100 flex items-center justify-end gap-2 sticky bottom-0 bg-white/95 backdrop-blur-sm -mx-4 px-4 sm:-mx-5 sm:px-5 py-2 mt-4">
-            <button type="button" @click="showDayModal = false" class="px-4 py-2 rounded-xl border border-slate-200 text-slate-600 font-semibold transition hover:bg-slate-100">
+          <div class="pt-3 border-t border-slate-100 flex items-center justify-end gap-2 sticky bottom-0 bg-white/95 backdrop-blur-sm -mx-4 px-4 sm:-mx-5 sm:px-5 py-2.5 mt-4">
+            <button type="button" @click="showDayModal = false" class="px-4 py-2.5 rounded-xl border border-slate-200 text-slate-600 font-bold transition hover:bg-slate-100">
               Hủy
             </button>
-            <button type="submit" class="px-5 py-2 rounded-xl bg-sky-500 hover:bg-sky-600 text-white font-bold transition shadow-md shadow-sky-500/20 active:scale-95">
+            <button type="submit" class="px-5 py-2.5 rounded-xl bg-sky-600 hover:bg-sky-700 text-white font-bold transition shadow-md shadow-sky-500/20 active:scale-95">
               Lưu Thay Đổi
             </button>
           </div>
         </form>
-
       </div>
     </div>
 
     <!-- ========================================== -->
     <!-- MODAL 3: SỬA THÔNG TIN CHUYẾN ĐI (TRIP)    -->
     <!-- ========================================== -->
-    <div v-if="showTripInfoModal" class="fixed inset-0 z-50 overflow-y-auto bg-black/60 backdrop-blur-sm flex min-h-full items-center justify-center p-3 sm:p-6 modal-overlay">
-      <div class="relative w-full max-w-lg rounded-2xl bg-white shadow-2xl border border-slate-200 overflow-hidden my-auto max-h-[90vh] flex flex-col animate-in fade-in zoom-in duration-150">
-        
+    <div v-if="showTripInfoModal" class="fixed inset-0 z-50 overflow-y-auto bg-slate-900/60 backdrop-blur-sm flex min-h-full items-end sm:items-center justify-center p-0 sm:p-4 modal-overlay">
+      <div class="relative w-full max-w-lg rounded-t-3xl sm:rounded-2xl bg-white shadow-2xl border border-slate-200 overflow-hidden max-h-[90vh] flex flex-col">
         <div class="p-4 sm:p-5 border-b border-slate-100 flex items-center justify-between flex-shrink-0 bg-white">
-          <h3 class="text-base font-bold text-slate-900 flex items-center gap-2">
+          <h3 class="text-base font-extrabold text-slate-900 flex items-center gap-2">
             <i class="fa-solid fa-map-location-dot text-rose-500"></i>
-            Chỉnh Sửa Thông Tin Chuyến Đi
+            <span>Chỉnh Sửa Thông Tin Chuyến Đi</span>
           </h3>
-          <button @click="showTripInfoModal = false" class="text-slate-400 hover:text-slate-600 p-1.5 rounded-lg hover:bg-slate-100 transition">
+          <button @click="showTripInfoModal = false" class="text-slate-400 hover:text-slate-600 w-8 h-8 rounded-xl hover:bg-slate-100 flex items-center justify-center transition">
             <i class="fa-solid fa-xmark text-base"></i>
           </button>
         </div>
 
         <form @submit.prevent="saveTripInfo" class="p-4 sm:p-5 space-y-3.5 text-xs sm:text-sm overflow-y-auto flex-1">
           <div>
-            <label class="block font-semibold text-slate-700 mb-1">Tên chuyến đi:</label>
-            <input v-model="tripInfoForm.title" type="text" required class="w-full px-3 py-2 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-sky-500 font-bold text-slate-900">
+            <label class="block font-bold text-slate-700 mb-1">Tên chuyến đi:</label>
+            <input v-model="tripInfoForm.title" type="text" required class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-sky-500 font-bold text-slate-900">
           </div>
 
           <div class="grid grid-cols-2 gap-3">
             <div>
-              <label class="block font-semibold text-slate-700 mb-1">Ngày bắt đầu:</label>
-              <input v-model="tripInfoForm.startDate" type="date" required class="w-full px-3 py-2 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-sky-500 font-medium">
+              <label class="block font-bold text-slate-700 mb-1">Ngày bắt đầu:</label>
+              <input v-model="tripInfoForm.startDate" type="date" required class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-sky-500 font-semibold">
             </div>
             <div>
-              <label class="block font-semibold text-slate-700 mb-1">Ngày kết thúc:</label>
-              <input v-model="tripInfoForm.endDate" type="date" required class="w-full px-3 py-2 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-sky-500 font-medium">
+              <label class="block font-bold text-slate-700 mb-1">Ngày kết thúc:</label>
+              <input v-model="tripInfoForm.endDate" type="date" required class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-sky-500 font-semibold">
             </div>
           </div>
 
           <div class="grid grid-cols-2 gap-3">
             <div>
-              <label class="block font-semibold text-slate-700 mb-1">Điểm khởi hành:</label>
-              <input v-model="tripInfoForm.departure" type="text" class="w-full px-3 py-2 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-sky-500">
+              <label class="block font-bold text-slate-700 mb-1">Điểm khởi hành:</label>
+              <input v-model="tripInfoForm.departure" type="text" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-sky-500">
             </div>
             <div>
-              <label class="block font-semibold text-slate-700 mb-1">Điểm đến:</label>
-              <input v-model="tripInfoForm.destination" type="text" class="w-full px-3 py-2 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-sky-500">
+              <label class="block font-bold text-slate-700 mb-1">Điểm đến:</label>
+              <input v-model="tripInfoForm.destination" type="text" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-sky-500">
             </div>
           </div>
 
           <div>
-            <label class="block font-semibold text-slate-700 mb-1">Ghi chú chuyến đi:</label>
-            <textarea v-model="tripInfoForm.notes" rows="2" class="w-full px-3 py-2 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-sky-500 text-xs"></textarea>
+            <label class="block font-bold text-slate-700 mb-1">Ghi chú chuyến đi:</label>
+            <textarea v-model="tripInfoForm.notes" rows="2" class="w-full px-3.5 py-2 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-sky-500 text-xs"></textarea>
           </div>
 
-          <div class="pt-3 border-t border-slate-100 flex items-center justify-end gap-2 sticky bottom-0 bg-white/95 backdrop-blur-sm -mx-4 px-4 sm:-mx-5 sm:px-5 py-2 mt-4">
-            <button type="button" @click="showTripInfoModal = false" class="px-4 py-2 rounded-xl border border-slate-200 text-slate-600 font-semibold transition hover:bg-slate-100">
+          <div class="pt-3 border-t border-slate-100 flex items-center justify-end gap-2 sticky bottom-0 bg-white/95 backdrop-blur-sm -mx-4 px-4 sm:-mx-5 sm:px-5 py-2.5 mt-4">
+            <button type="button" @click="showTripInfoModal = false" class="px-4 py-2.5 rounded-xl border border-slate-200 text-slate-600 font-bold transition hover:bg-slate-100">
               Hủy
             </button>
-            <button type="submit" class="px-5 py-2 rounded-xl bg-sky-500 hover:bg-sky-600 text-white font-bold transition shadow-md shadow-sky-500/20 active:scale-95">
+            <button type="submit" class="px-5 py-2.5 rounded-xl bg-sky-600 hover:bg-sky-700 text-white font-bold transition shadow-md shadow-sky-500/20 active:scale-95">
               Lưu Thông Tin
             </button>
           </div>
         </form>
-
       </div>
     </div>
 
     <!-- ========================================== -->
     <!-- MODAL 4: THÊM ĐỊA ĐIỂM GỢI Ý VÀO LỊCH TRÌNH -->
     <!-- ========================================== -->
-    <div v-if="showAddRecToDayModal" class="fixed inset-0 z-50 overflow-y-auto bg-black/60 backdrop-blur-sm flex min-h-full items-center justify-center p-3 sm:p-6 modal-overlay">
-      <div class="relative w-full max-w-md rounded-2xl bg-white shadow-2xl border border-slate-200 overflow-hidden my-auto max-h-[90vh] flex flex-col p-5 space-y-4 animate-in fade-in zoom-in duration-150">
-        
+    <div v-if="showAddRecToDayModal" class="fixed inset-0 z-50 overflow-y-auto bg-slate-900/60 backdrop-blur-sm flex min-h-full items-end sm:items-center justify-center p-0 sm:p-4 modal-overlay">
+      <div class="relative w-full max-w-md rounded-t-3xl sm:rounded-2xl bg-white shadow-2xl border border-slate-200 overflow-hidden max-h-[90vh] flex flex-col p-5 space-y-4">
         <div class="flex items-center justify-between border-b border-slate-100 pb-3 flex-shrink-0">
-          <h3 class="text-base font-bold text-slate-900 flex items-center gap-2">
+          <h3 class="text-base font-extrabold text-slate-900 flex items-center gap-2">
             <i class="fa-solid fa-location-dot text-rose-500"></i>
-            Thêm Vào Lịch Trình
+            <span>Thêm Vào Lịch Trình</span>
           </h3>
-          <button @click="showAddRecToDayModal = false" class="text-slate-400 hover:text-slate-600 p-1.5 rounded-lg hover:bg-slate-100 transition">
+          <button @click="showAddRecToDayModal = false" class="text-slate-400 hover:text-slate-600 w-8 h-8 rounded-xl hover:bg-slate-100 flex items-center justify-center transition">
             <i class="fa-solid fa-xmark text-base"></i>
           </button>
         </div>
 
         <div v-if="targetRecForItinerary" class="space-y-3.5 text-xs sm:text-sm overflow-y-auto flex-1">
-          <div class="p-3 bg-slate-50 rounded-xl border border-slate-100">
+          <div class="p-3.5 bg-slate-50 rounded-xl border border-slate-100">
             <strong class="text-slate-900 block text-sm">{{ targetRecForItinerary.name }}</strong>
             <span class="text-slate-500 text-xs">{{ targetRecForItinerary.tag }} • {{ targetRecForItinerary.bestTime }}</span>
           </div>
 
           <div>
-            <label class="block font-semibold text-slate-700 mb-1">Chọn ngày muốn đi:</label>
-            <select v-model="selectedDayForRec" class="w-full px-3 py-2 rounded-xl border border-slate-200 bg-white font-medium">
+            <label class="block font-bold text-slate-700 mb-1">Chọn ngày muốn đi:</label>
+            <select v-model="selectedDayForRec" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 bg-white font-semibold">
               <option v-for="(day, idx) in tripData.itinerary" :key="day.day" :value="idx">
                 Ngày {{ day.day }} ({{ day.date }})
               </option>
@@ -1087,54 +1267,52 @@
           </div>
 
           <div>
-            <label class="block font-semibold text-slate-700 mb-1">Khung giờ dự kiến:</label>
-            <input v-model="selectedTimeForRec" type="text" placeholder="Vd: 09:00" class="w-full px-3 py-2 rounded-xl border border-slate-200 font-medium">
+            <label class="block font-bold text-slate-700 mb-1">Khung giờ dự kiến:</label>
+            <input v-model="selectedTimeForRec" type="text" placeholder="Vd: 09:00" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 font-semibold">
           </div>
 
           <div class="pt-3 border-t border-slate-100 flex items-center justify-end gap-2 sticky bottom-0 bg-white">
-            <button @click="showAddRecToDayModal = false" class="px-4 py-2 rounded-xl border border-slate-200 text-slate-600 font-semibold hover:bg-slate-100 transition">
+            <button @click="showAddRecToDayModal = false" class="px-4 py-2.5 rounded-xl border border-slate-200 text-slate-600 font-bold hover:bg-slate-100 transition">
               Hủy
             </button>
-            <button @click="confirmAddRecToItinerary" class="px-5 py-2 rounded-xl bg-sky-500 hover:bg-sky-600 text-white font-bold transition shadow-md shadow-sky-500/20 active:scale-95">
+            <button @click="confirmAddRecToItinerary" class="px-5 py-2.5 rounded-xl bg-sky-600 hover:bg-sky-700 text-white font-bold transition shadow-md shadow-sky-500/20 active:scale-95">
               Xác Nhận Thêm
             </button>
           </div>
         </div>
-
       </div>
     </div>
 
     <!-- ========================================== -->
     <!-- MODAL 5: THÊM / SỬA KHOẢN CHI (EXPENSE)     -->
     <!-- ========================================== -->
-    <div v-if="showExpenseModal" class="fixed inset-0 z-50 overflow-y-auto bg-black/60 backdrop-blur-sm flex min-h-full items-center justify-center p-3 sm:p-6 modal-overlay">
-      <div class="relative w-full max-w-md rounded-2xl bg-white shadow-2xl border border-slate-200 overflow-hidden my-auto max-h-[90vh] flex flex-col animate-in fade-in zoom-in duration-150">
-        
+    <div v-if="showExpenseModal" class="fixed inset-0 z-50 overflow-y-auto bg-slate-900/60 backdrop-blur-sm flex min-h-full items-end sm:items-center justify-center p-0 sm:p-4 modal-overlay">
+      <div class="relative w-full max-w-md rounded-t-3xl sm:rounded-2xl bg-white shadow-2xl border border-slate-200 overflow-hidden max-h-[90vh] flex flex-col">
         <div class="p-4 sm:p-5 border-b border-slate-100 flex items-center justify-between flex-shrink-0 bg-white">
-          <h3 class="text-base font-bold text-slate-900 flex items-center gap-2">
+          <h3 class="text-base font-extrabold text-slate-900 flex items-center gap-2">
             <i class="fa-solid fa-receipt text-orange-500"></i>
-            {{ editingExpense ? 'Chỉnh Sửa Khoản Chi' : 'Thêm Khoản Chi Mới' }}
+            <span>{{ editingExpense ? 'Chỉnh Sửa Khoản Chi' : 'Thêm Khoản Chi Mới' }}</span>
           </h3>
-          <button @click="showExpenseModal = false" class="text-slate-400 hover:text-slate-600 p-1.5 rounded-lg hover:bg-slate-100 transition">
+          <button @click="showExpenseModal = false" class="text-slate-400 hover:text-slate-600 w-8 h-8 rounded-xl hover:bg-slate-100 flex items-center justify-center transition">
             <i class="fa-solid fa-xmark text-base"></i>
           </button>
         </div>
 
         <form @submit.prevent="saveExpense" class="p-4 sm:p-5 space-y-3.5 text-xs sm:text-sm overflow-y-auto flex-1">
           <div>
-            <label class="block font-semibold text-slate-700 mb-1">Tên khoản chi:</label>
-            <input v-model="expenseForm.title" type="text" required placeholder="Vd: Hải sản Một Nắng" class="w-full px-3 py-2 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-sky-500 font-bold text-slate-900">
+            <label class="block font-bold text-slate-700 mb-1">Tên khoản chi:</label>
+            <input v-model="expenseForm.title" type="text" required placeholder="Vd: Hải sản Một Nắng" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-sky-500 font-bold text-slate-900">
           </div>
 
           <div class="grid grid-cols-2 gap-3">
             <div>
-              <label class="block font-semibold text-slate-700 mb-1">Số tiền (VNĐ):</label>
-              <input v-model="expenseForm.amount" type="text" required placeholder="Vd: 500k hoặc 1.2tr" class="w-full px-3 py-2 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-sky-500 font-bold text-slate-900">
+              <label class="block font-bold text-slate-700 mb-1">Số tiền (VNĐ):</label>
+              <input v-model="expenseForm.amount" type="text" required placeholder="Vd: 500k hoặc 1.2tr" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-sky-500 font-bold text-slate-900">
             </div>
 
             <div>
-              <label class="block font-semibold text-slate-700 mb-1">Người đã trả:</label>
-              <select v-model="expenseForm.payer" class="w-full px-3 py-2 rounded-xl border border-slate-200 bg-white font-medium">
+              <label class="block font-bold text-slate-700 mb-1">Người đã trả:</label>
+              <select v-model="expenseForm.payer" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 bg-white font-semibold">
                 <option v-for="t in tripData.tripInfo.travelers" :key="t.id" :value="t.name">
                   {{ t.name }}
                 </option>
@@ -1143,8 +1321,8 @@
           </div>
 
           <div>
-            <label class="block font-semibold text-slate-700 mb-1">Danh mục:</label>
-            <select v-model="expenseForm.category" class="w-full px-3 py-2 rounded-xl border border-slate-200 bg-white font-medium">
+            <label class="block font-bold text-slate-700 mb-1">Danh mục:</label>
+            <select v-model="expenseForm.category" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 bg-white font-semibold">
               <option value="food">Ăn uống & Hải sản</option>
               <option value="hotel">Khách sạn & Resort</option>
               <option value="transport">Di chuyển & Limousine</option>
@@ -1155,25 +1333,24 @@
           </div>
 
           <div>
-            <label class="block font-semibold text-slate-700 mb-1">Ghi chú (tùy chọn):</label>
-            <input v-model="expenseForm.note" type="text" placeholder="Ghi chú chi tiết..." class="w-full px-3 py-2 rounded-xl border border-slate-200">
+            <label class="block font-bold text-slate-700 mb-1">Ghi chú (tùy chọn):</label>
+            <input v-model="expenseForm.note" type="text" placeholder="Ghi chú chi tiết..." class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200">
           </div>
 
-          <div class="pt-3 border-t border-slate-100 flex items-center justify-end gap-2 sticky bottom-0 bg-white/95 backdrop-blur-sm -mx-4 px-4 sm:-mx-5 sm:px-5 py-2 mt-4">
-            <button type="button" @click="showExpenseModal = false" class="px-4 py-2 rounded-xl border border-slate-200 text-slate-600 font-semibold hover:bg-slate-100 transition">
+          <div class="pt-3 border-t border-slate-100 flex items-center justify-end gap-2 sticky bottom-0 bg-white/95 backdrop-blur-sm -mx-4 px-4 sm:-mx-5 sm:px-5 py-2.5 mt-4">
+            <button type="button" @click="showExpenseModal = false" class="px-4 py-2.5 rounded-xl border border-slate-200 text-slate-600 font-bold hover:bg-slate-100 transition">
               Hủy
             </button>
-            <button type="submit" class="px-5 py-2 rounded-xl bg-orange-500 hover:bg-orange-600 text-white font-bold transition shadow-md shadow-orange-500/20 active:scale-95">
+            <button type="submit" class="px-5 py-2.5 rounded-xl bg-orange-500 hover:bg-orange-600 text-white font-bold transition shadow-md shadow-orange-500/20 active:scale-95">
               {{ editingExpense ? 'Cập Nhật Khoản Chi' : 'Lưu Chi Phí' }}
             </button>
           </div>
         </form>
-
       </div>
     </div>
 
     <!-- TOAST NOTIFICATION -->
-    <div v-if="toast.show" class="fixed bottom-6 right-6 z-50 flex items-center gap-2.5 px-4 py-3 rounded-2xl shadow-xl border text-xs sm:text-sm font-semibold transition-all duration-300 toast-container" :class="[toast.type === 'error' ? 'bg-rose-600 text-white border-rose-500' : 'bg-slate-900 text-white border-slate-800']">
+    <div v-if="toast.show" class="fixed bottom-20 md:bottom-6 right-4 sm:right-6 z-50 flex items-center gap-2.5 px-4 py-3 rounded-2xl shadow-2xl border text-xs sm:text-sm font-bold transition-all duration-300 toast-container max-w-sm" :class="[toast.type === 'error' ? 'bg-rose-600 text-white border-rose-500' : 'bg-slate-900 text-white border-slate-800']">
       <i :class="[toast.type === 'error' ? 'fa-solid fa-triangle-exclamation' : 'fa-solid fa-circle-check text-emerald-400']"></i>
       <span>{{ toast.message }}</span>
     </div>
@@ -1181,7 +1358,7 @@
   </div>
 
   <!-- Scripts -->
-  <script src="data.js?v=2.7"></script>
-  <script src="app.js?v=2.7"></script>
+  <script src="data.js?v=3.0"></script>
+  <script src="app.js?v=3.0"></script>
 </body>
 </html>

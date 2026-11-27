@@ -9,6 +9,13 @@ createApp({
     const activeTab = ref("itinerary"); // 'itinerary', 'explore', 'budget', 'packing', 'tips'
     const selectedDayIndex = ref(0);
     const filterRecType = ref("all");
+    const showHeroDetails = ref(false);
+    const showToolsMenu = ref(false);
+    const activitySearch = ref("");
+    const activityCatFilter = ref("all");
+    const expenseSearch = ref("");
+    const expenseCatFilter = ref("all");
+    const expensePayerFilter = ref("all");
     const toast = ref({ show: false, message: "", type: "info" });
 
     // Modals
@@ -151,6 +158,40 @@ createApp({
       const all = tripData.value.recommendations || [];
       if (filterRecType.value === "all") return all;
       return all.filter((r) => r.type === filterRecType.value);
+    });
+
+    const totalActivitiesCount = computed(() => {
+      return (tripData.value.itinerary || []).reduce((acc, d) => acc + (d.activities ? d.activities.length : 0), 0);
+    });
+
+    const completedActivitiesCount = computed(() => {
+      return (tripData.value.itinerary || []).reduce(
+        (acc, d) => acc + (d.activities ? d.activities.filter((a) => a.done).length : 0),
+        0
+      );
+    });
+
+    function filterDayActivities(activities) {
+      if (!activities) return [];
+      return activities.filter((act) => {
+        const matchCat = activityCatFilter.value === "all" || act.category === activityCatFilter.value;
+        if (!matchCat) return false;
+        const q = activitySearch.value.trim().toLowerCase();
+        if (!q) return true;
+        const hay = `${act.title || ""} ${act.location || ""} ${act.notes || ""} ${act.time || ""}`.toLowerCase();
+        return hay.includes(q);
+      });
+    }
+
+    const filteredExpenses = computed(() => {
+      const list = tripData.value.expenses || [];
+      return list.filter((exp) => {
+        if (expenseCatFilter.value !== "all" && exp.category !== expenseCatFilter.value) return false;
+        if (expensePayerFilter.value !== "all" && exp.payer !== expensePayerFilter.value) return false;
+        const q = expenseSearch.value.trim().toLowerCase();
+        if (!q) return true;
+        return `${exp.title || ""} ${exp.note || ""} ${exp.payer || ""}`.toLowerCase().includes(q);
+      });
     });
 
     // 4. Bill Split Engine (Chia tiền nhóm)
@@ -642,30 +683,59 @@ createApp({
     }
 
     function resetToDefault() {
-      if (confirm("Khôi phục về lịch trình gợi ý ban đầu? Các thay đổi của bạn sẽ bị làm mới.")) {
-        tripData.value = JSON.parse(JSON.stringify(window.DEFAULT_TRIP_DATA));
-        showToast("Đã khôi phục dữ liệu mẫu hoàn hảo!");
+      tripData.value = JSON.parse(JSON.stringify(window.DEFAULT_TRIP_DATA));
+      hasLocalEdits.value = false;
+      try { localStorage.setItem("mui_ne_has_local_edits", "false"); } catch (e) {}
+      showToolsMenu.value = false;
+      showToast("Đã khôi phục dữ liệu lịch trình gốc!");
+    }
+
+    function copySettlementText() {
+      const res = billSplitResults.value;
+      let txt = `💰 BẢNG QUYẾT TOÁN CHI PHÍ CHUYẾN ĐI MŨI NÉ
+`;
+      txt += `• Tổng chi toàn đoàn: ${formatCurrency(totalExpenseActual.value)}
+`;
+      txt += `• Bình quân mỗi người (${tripData.value.tripInfo.travelers.length} bạn): ${formatCurrency(res.perPerson)}
+
+`;
+      if (res.settlements.length > 0) {
+        txt += `🔄 CHI TIẾT CHUYỂN KHOẢN:
+`;
+        res.settlements.forEach((s, i) => {
+          txt += `${i + 1}. ${s.from} ➔ chuyển cho ${s.to}: ${formatCurrency(s.amount)}
+`;
+        });
+      } else {
+        txt += `✅ Các thành viên đã cân bằng chi phí!
+`;
       }
+      navigator.clipboard.writeText(txt).then(
+        () => showToast("Đã copy bảng chia tiền! Dán ngay vào nhóm Zalo nhé."),
+        () => showToast("Không thể tự động copy.", "error")
+      );
     }
 
     function printItinerary() {
+      showToolsMenu.value = false;
       window.print();
     }
 
-    // Helper category labels
+    // Helper category labels & icons
     function getCategoryBadge(cat) {
       const map = {
-        transport: { label: "Di chuyển", bg: "bg-blue-100 text-blue-700 border-blue-200" },
-        food: { label: "Ăn uống", bg: "bg-amber-100 text-amber-700 border-amber-200" },
-        sightseeing: { label: "Tham quan", bg: "bg-emerald-100 text-emerald-700 border-emerald-200" },
-        activity: { label: "Hoạt động", bg: "bg-purple-100 text-purple-700 border-purple-200" },
-        rest: { label: "Nghỉ ngơi", bg: "bg-teal-100 text-teal-700 border-teal-200" },
-        nightlife: { label: "Chill đêm", bg: "bg-pink-100 text-pink-700 border-pink-200" },
-        shopping: { label: "Mua sắm", bg: "bg-orange-100 text-orange-700 border-orange-200" },
-        hotel: { label: "Khách sạn", bg: "bg-indigo-100 text-indigo-700 border-indigo-200" },
-        ticket: { label: "Vé tham quan", bg: "bg-rose-100 text-rose-700 border-rose-200" }
+        transport: { label: "Di chuyển", icon: "fa-solid fa-plane-up", bg: "bg-sky-50 text-sky-700 border-sky-200" },
+        food: { label: "Ăn uống", icon: "fa-solid fa-utensils", bg: "bg-amber-50 text-amber-700 border-amber-200" },
+        chill: { label: "Cafe & Chill", icon: "fa-solid fa-mug-hot", bg: "bg-cyan-50 text-cyan-700 border-cyan-200" },
+        sightseeing: { label: "Tham quan", icon: "fa-solid fa-camera-retro", bg: "bg-emerald-50 text-emerald-700 border-emerald-200" },
+        activity: { label: "Trải nghiệm", icon: "fa-solid fa-car-side", bg: "bg-purple-50 text-purple-700 border-purple-200" },
+        rest: { label: "Lưu trú & Nghỉ", icon: "fa-solid fa-bed", bg: "bg-teal-50 text-teal-700 border-teal-200" },
+        nightlife: { label: "Tiệc & Sinh nhật", icon: "fa-solid fa-cake-candles", bg: "bg-rose-50 text-rose-700 border-rose-200" },
+        shopping: { label: "Mua sắm", icon: "fa-solid fa-bag-shopping", bg: "bg-orange-50 text-orange-700 border-orange-200" },
+        hotel: { label: "Khách sạn", icon: "fa-solid fa-hotel", bg: "bg-indigo-50 text-indigo-700 border-indigo-200" },
+        ticket: { label: "Vé tham quan", icon: "fa-solid fa-ticket", bg: "bg-pink-50 text-pink-700 border-pink-200" }
       };
-      return map[cat] || { label: "Khác", bg: "bg-slate-100 text-slate-700 border-slate-200" };
+      return map[cat] || { label: "Hoạt động", icon: "fa-solid fa-location-dot", bg: "bg-slate-100 text-slate-700 border-slate-200" };
     }
 
     // 11. Live Google Sheet Synchronization (Database trực tiếp)
@@ -862,6 +932,19 @@ createApp({
       activeTab,
       selectedDayIndex,
       filterRecType,
+      showHeroDetails,
+      showToolsMenu,
+      activitySearch,
+      activityCatFilter,
+      expenseSearch,
+      expenseCatFilter,
+      expensePayerFilter,
+      hasLocalEdits,
+      totalActivitiesCount,
+      completedActivitiesCount,
+      filterDayActivities,
+      filteredExpenses,
+      copySettlementText,
       toast,
       isSyncing,
       lastSyncedTime,

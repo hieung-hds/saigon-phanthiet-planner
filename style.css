@@ -1,4 +1,4 @@
-/* Custom CSS & Print Styles for Phan Thiet - Mui Ne Trip Planner */
+/* Custom CSS & Mobile-First Design System for Saigon - Phan Thiet - Mui Ne Trip Planner */
 
 [v-cloak] {
   display: none !important;
@@ -19,18 +19,27 @@
 }
 
 :root {
-  --primary-coral: #ff6b4a;
+  --primary-coral: #f97316;
   --ocean-teal: #0284c7;
   --ocean-dark: #0f172a;
   --sand-gold: #f59e0b;
   --app-font: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Segoe UI", Roboto, "Helvetica Neue", 'UTM HelvenTln', Arial, sans-serif;
 }
 
+html {
+  scroll-behavior: smooth;
+  -webkit-tap-highlight-color: transparent;
+}
+
 body {
   font-family: var(--app-font);
   font-style: normal !important;
-  background-color: #f8fafc;
-  color: #1e293b;
+  background-color: #f1f5f9;
+  background-image: 
+    radial-gradient(at 0% 0%, rgba(14, 165, 233, 0.07) 0px, transparent 50%),
+    radial-gradient(at 100% 0%, rgba(249, 115, 22, 0.06) 0px, transparent 50%);
+  background-attachment: fixed;
+  color: #0f172a;
   overflow-x: hidden;
   letter-spacing: -0.01em;
   -webkit-font-smoothing: antialiased;
@@ -60,6 +69,15 @@ i,
   font-style: normal !important;
 }
 
+/* Hide scrollbar for horizontal pill bars */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
 /* Custom Scrollbar */
 ::-webkit-scrollbar {
   width: 6px;
@@ -78,71 +96,66 @@ i,
 
 /* Modern Frosted Glassmorphism */
 .glass-panel {
-  background: rgba(255, 255, 255, 0.90);
+  background: rgba(255, 255, 255, 0.92);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
-  border: 1px solid rgba(226, 232, 240, 0.85);
+  border: 1px solid rgba(226, 232, 240, 0.9);
 }
 
 .glass-nav {
   background: rgba(255, 255, 255, 0.95);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
-  border-bottom: 1px solid rgba(226, 232, 240, 0.85);
+  border-bottom: 1px solid rgba(226, 232, 240, 0.9);
+}
+
+.glass-bottom-nav {
+  background: rgba(255, 255, 255, 0.96);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-top: 1px solid rgba(226, 232, 240, 0.9);
+  padding-bottom: env(safe-area-inset-bottom, 0px);
 }
 
 .glass-card-dark {
-  background: rgba(15, 23, 42, 0.40);
+  background: rgba(15, 23, 42, 0.42);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
-  border: 1px solid rgba(255, 255, 255, 0.15);
+  border: 1px solid rgba(255, 255, 255, 0.14);
 }
 
 .glass-card-light {
-  background: rgba(255, 255, 255, 0.14);
-  backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
-  border: 1px solid rgba(255, 255, 255, 0.22);
+  background: rgba(255, 255, 255, 0.12);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
-/* Luxury Ocean Gradient Banner */
+/* Luxury Ocean Sunset Gradient Banner */
 .hero-gradient {
-  background: linear-gradient(135deg, #091e3a 0%, #10375c 42%, #0e607c 75%, #d9651a 100%);
+  background: linear-gradient(135deg, #0b192c 0%, #0f3460 40%, #0e5e76 72%, #d96b27 100%);
 }
 
-.ocean-gradient-text {
-  background: linear-gradient(135deg, #0284c7 0%, #ea580c 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-}
-
-/* Timeline vertical line */
+/* Timeline vertical stem */
 .timeline-stem {
   position: absolute;
   top: 1.5rem;
-  bottom: 0;
+  bottom: 1.5rem;
   left: 1.25rem;
   width: 2px;
-  background: linear-gradient(to bottom, #38bdf8, #e2e8f0);
+  background: linear-gradient(to bottom, #0ea5e9 0%, #cbd5e1 100%);
   transform: translateX(-50%);
 }
 
-/* Subtle badge pulse */
-@keyframes subtle-pulse {
-  0%, 100% { opacity: 1; transform: scale(1); }
-  50% { opacity: 0.9; transform: scale(1.03); }
-}
-.pulse-badge {
-  animation: subtle-pulse 3s infinite ease-in-out;
-}
-
-/* Card hover animation */
+/* Card hover & touch interaction */
 .card-hover {
   transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 }
-.card-hover:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 10px 25px -5px rgba(15, 23, 42, 0.08), 0 8px 10px -6px rgba(15, 23, 42, 0.04);
+@media (hover: hover) {
+  .card-hover:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 24px -6px rgba(15, 23, 42, 0.08), 0 4px 10px -4px rgba(15, 23, 42, 0.04);
+  }
 }
 
 /* Print Styles */
@@ -152,7 +165,7 @@ i,
     color: black !important;
     font-size: 11pt;
   }
-  .no-print, nav, button, .action-btn, .modal-overlay, .toast-container {
+  .no-print, nav, button, .action-btn, .modal-overlay, .toast-container, .glass-bottom-nav {
     display: none !important;
   }
   .print-only { display: block !important; }
